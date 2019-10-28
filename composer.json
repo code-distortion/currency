@@ -1,0 +1,65 @@
+{
+    "name": "code-distortion/currency",
+    "description": "Accurate currency maths with locale-aware formatting - integrated with Laravel or stand-alone",
+    "keywords": [
+        "code distortion",
+        "currency",
+        "accurate",
+        "precision",
+        "math",
+        "bcmath",
+        "numberformatter",
+        "calculations",
+        "comparisons",
+        "localisation",
+        "immutable",
+        "laravel"
+    ],
+    "homepage": "https://github.com/code-distortion/currency",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Tim Chandler",
+            "email": "tim@code-distortion.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "code-distortion/realnum": "^0.1.2",
+        "ext-intl": "*"
+    },
+    "require-dev": {
+        "jchook/phpunit-assert-throws": "^1.0",
+        "orchestra/testbench": "^4.0",
+        "phpstan/phpstan": "^0.10 || ^0.11",
+        "phpunit/phpunit": "^7.0 || ^8.0",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeDistortion\\Currency\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodeDistortion\\Currency\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon --level=7 .",
+        "phpcs": "vendor/bin/phpcs ."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodeDistortion\\Currency\\Laravel\\ServiceProvider"
+            ]
+        }
+    }
+}
