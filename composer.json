@@ -29,7 +29,7 @@
         "php": "^7.1",
         "ext-intl": "*",
         "code-distortion/options": "^0.2",
-        "code-distortion/realnum": "^0.2"
+        "code-distortion/realnum": "^0.3"
     },
     "require-dev": {
         "jchook/phpunit-assert-throws": "^1.0",
