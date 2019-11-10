@@ -2,14 +2,14 @@
 
 namespace CodeDistortion\Currency\Tests\StandAlone;
 
-use PHPUnit\Framework\TestCase as UnitTestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 use Jchook\AssertThrows\AssertThrows;
 
 /**
  * The test case that unit tests extend from
  */
-class TestCase extends UnitTestCase
+class TestCase extends BaseTestCase
 {
     use AssertThrows;
 }
