@@ -4,6 +4,7 @@ namespace CodeDistortion\Currency;
 
 use CodeDistortion\Options\Options;
 use CodeDistortion\RealNum\Base;
+use Exception;
 use NumberFormatter;
 use InvalidArgumentException;
 use Throwable;
@@ -21,6 +22,11 @@ use Throwable;
 class Currency extends Base
 {
     /**
+     * The original default curCode - used when resetting the class-level defaults
+     */
+    const ORIG_DEFAULT_CUR_CODE = null;
+
+    /**
      * The original default format-settings - used when resetting the class-level defaults
      */
     const ORIG_FORMAT_SETTINGS = [
@@ -36,6 +42,14 @@ class Currency extends Base
     ];
 
 
+
+    /**
+     * The default currency code to use (at the class-level)
+     *
+     * Objects will pick this value up when instantiated (if not specified when instantiating)
+     * @var integer|string|null
+     */
+    protected static $defaultCurCode = null;
 
     /**
      * The default maximum number of decimal places available to use (at the class-level)
@@ -136,13 +150,22 @@ class Currency extends Base
     /**
      * Constructor
      *
-     * @param integer|string                 $curCode        The currency the $value is in.
      * @param integer|float|string|self|null $value          The initial value to store.
+     * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
+     * @throws Exception Thrown when a curCode wasn't passed and no default hasn't been specified.
      */
-    public function __construct($curCode, $value = null, bool $throwException = true)
+    public function __construct($value = null, $curCode = null, bool $throwException = true)
     {
+        // fall-back to the default curCode if needed
+        if (is_null($curCode)) {
+            if (is_null(static::$defaultCurCode)) {
+                throw new Exception('Currency-code was not specified. Please pass one or specify a default');
+            }
+            $curCode = static::$defaultCurCode;
+        }
+
         $this->setCurCode($curCode);
         parent::__construct($value, $throwException);
     }
@@ -150,15 +173,15 @@ class Currency extends Base
     /**
      * Build a new Currency object
      *
-     * @param integer|string                 $curCode        The currency the $value is in.
      * @param integer|float|string|self|null $value          The initial value to store.
+     * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
      * @return static
      */
-    public static function new($curCode, $value = null, bool $throwException = true)
+    public static function new($value = null, $curCode = null, bool $throwException = true)
     {
-        return new static($curCode, $value, $throwException);
+        return new static($value, $curCode, $throwException);
     }
 
 
@@ -176,9 +199,31 @@ class Currency extends Base
     public static function resetDefaults(): void
     {
         parent::resetDefaults();
+        static::$defaultCurCode = static::ORIG_DEFAULT_CUR_CODE;
         static::$currencyResolver = null;
         static::$currencyDecPl = [];
         static::$currencySymbols = [];
+    }
+
+    /**
+     * Retrieve the default curCode
+     *
+     * @return integer|string|null
+     */
+    public static function getDefaultCurCode()
+    {
+        return static::$defaultCurCode;
+    }
+
+    /**
+     * Update the default curCode
+     *
+     * @param integer|string|null $curCode The curCode to set.
+     * @return void
+     */
+    public static function setDefaultCurCode($curCode): void
+    {
+        static::$defaultCurCode = $curCode;
     }
 
 
