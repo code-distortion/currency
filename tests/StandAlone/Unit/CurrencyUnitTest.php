@@ -21,6 +21,25 @@ use stdClass;
 class CurrencyUnitTest extends TestCase
 {
     /**
+     * Some alternate format settings used below for testing
+     *
+     * @var array
+     */
+    protected $altFormatSettings = [
+        'null' => 'null',
+        'decPl' => 5,
+        'trailZeros' => false,
+        'symbol' => false,
+        'thousands' => false,
+        'showPlus' => true,
+        'accountingNeg' => true,
+        'locale' => 'en-US',
+        'breaking' => true,
+    ];
+
+
+
+    /**
      * Some set-up, run before each test
      *
      * @return void
@@ -97,43 +116,46 @@ class CurrencyUnitTest extends TestCase
             '$12,345,678',
             '$12345678.00',
             '$0.00',
+            'null',
             '$12345678',
             '(12345678)',
             '$12,345,678.90',
             '12,345,678.90',
         ];
         $output['AUD']['fr'] = [
-            '12 345 678,90 $AU',
-            '-12 345 678,90 $AU',
-            '12 345 678,90 $AU',
-            '(12 345 678,90 $AU)',
-            '+12 345 678,90 $AU',
-            '12 345 678,90',
-            '12 345 678,00 $AU',
-            '12 345 678,90 $AU',
-            '12 345 678 $AU',
-            '12345678,00 $AU',
-            '0,00 $AU',
-            '12345678 $AU',
+            '12 345 678,90 $AU',
+            '-12 345 678,90 $AU',
+            '12 345 678,90 $AU',
+            '(12 345 678,90 $AU)',
+            '+12 345 678,90 $AU',
+            '12 345 678,90',
+            '12 345 678,00 $AU',
+            '12 345 678,90 $AU',
+            '12 345 678 $AU',
+            '12345678,00 $AU',
+            '0,00 $AU',
+            'null',
+            '12345678 $AU',
             '(12345678)',
-            '12 345 678,90 $AU', // non-breaking spaces
-            '12 345 678,90', // non-breaking spaces
+            '12 345 678,90 $AU', // breaking spaces
+            '12 345 678,90', // breaking spaces
         ];
         $output['AUD']['de'] = [
-            '12.345.678,90 AU$',
-            '-12.345.678,90 AU$',
-            '12.345.678,90 AU$',
-            '(12.345.678,90 AU$)',
-            '+12.345.678,90 AU$',
+            '12.345.678,90 AU$',
+            '-12.345.678,90 AU$',
+            '12.345.678,90 AU$',
+            '(12.345.678,90 AU$)',
+            '+12.345.678,90 AU$',
             '12.345.678,90',
-            '12.345.678,00 AU$',
-            '12.345.678,90 AU$',
-            '12.345.678 AU$',
-            '12345678,00 AU$',
-            '0,00 AU$',
-            '12345678 AU$',
+            '12.345.678,00 AU$',
+            '12.345.678,90 AU$',
+            '12.345.678 AU$',
+            '12345678,00 AU$',
+            '0,00 AU$',
+            'null',
+            '12345678 AU$',
             '(12345678)',
-            '12.345.678,90 AU$', // non-breaking spaces
+            '12.345.678,90 AU$', // breaking spaces
             '12.345.678,90',
         ];
         $output['AUD']['ja-JP'] = [
@@ -148,162 +170,172 @@ class CurrencyUnitTest extends TestCase
             'A$12,345,678',
             'A$12345678.00',
             'A$0.00',
+            'null',
             'A$12345678',
             '(12345678)',
             'A$12,345,678.90',
             '12,345,678.90',
         ];
         $output['AUD']['en-IN'] = [
-            'A$ 1,23,45,678.90',
-            '-A$ 1,23,45,678.90',
-            'A$ 1,23,45,678.90',
-            '(A$ 1,23,45,678.90)',
-            '+A$ 1,23,45,678.90',
+            'A$ 1,23,45,678.90',
+            '-A$ 1,23,45,678.90',
+            'A$ 1,23,45,678.90',
+            '(A$ 1,23,45,678.90)',
+            '+A$ 1,23,45,678.90',
             '1,23,45,678.90',
-            'A$ 1,23,45,678.00',
-            'A$ 1,23,45,678.90',
-            'A$ 1,23,45,678',
-            'A$ 12345678.00',
-            'A$ 0.00',
-            'A$ 12345678',
+            'A$ 1,23,45,678.00',
+            'A$ 1,23,45,678.90',
+            'A$ 1,23,45,678',
+            'A$ 12345678.00',
+            'A$ 0.00',
+            'null',
+            'A$ 12345678',
             '(12345678)',
-            'A$ 1,23,45,678.90', // non-breaking spaces
+            'A$ 1,23,45,678.90', // breaking spaces
             '1,23,45,678.90',
         ];
         $output['AUD']['he'] = [
-            '‏12,345,678.90 A$',
-            '‏‎-12,345,678.90 A$',
-            '‏12,345,678.90 A$',
-            '(‏12,345,678.90 A$)',
-            '‏‎+12,345,678.90 A$',
+            '‏12,345,678.90 A$',
+            '‏‎-12,345,678.90 A$',
+            '‏12,345,678.90 A$',
+            '(‏12,345,678.90 A$)',
+            '‏‎+12,345,678.90 A$',
             '‏12,345,678.90',
-            '‏12,345,678.00 A$',
-            '‏12,345,678.90 A$',
-            '‏12,345,678 A$',
-            '‏12345678.00 A$',
-            '‏0.00 A$',
-            '‏12345678 A$',
+            '‏12,345,678.00 A$',
+            '‏12,345,678.90 A$',
+            '‏12,345,678 A$',
+            '‏12345678.00 A$',
+            '‏0.00 A$',
+            'null',
+            '‏12345678 A$',
             '(‏12345678)',
-            '‏12,345,678.90 A$', // non-breaking spaces
+            '‏12,345,678.90 A$', // breaking spaces
             '‏12,345,678.90',
         ];
         $output['AUD']['ar-EG'] = [
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '(١٢٬٣٤٥٬٦٧٨٫٩٠ AU$)',
-            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '(١٢٬٣٤٥٬٦٧٨٫٩٠ AU$)',
+            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
             '١٢٬٣٤٥٬٦٧٨٫٩٠',
-            '١٢٬٣٤٥٬٦٧٨٫٠٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨ AU$',
-            '١٢٣٤٥٦٧٨٫٠٠ AU$',
-            '٠٫٠٠ AU$',
-            '١٢٣٤٥٦٧٨ AU$',
+            '١٢٬٣٤٥٬٦٧٨٫٠٠ AU$',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '١٢٬٣٤٥٬٦٧٨ AU$',
+            '١٢٣٤٥٦٧٨٫٠٠ AU$',
+            '٠٫٠٠ AU$',
+            'null',
+            '١٢٣٤٥٦٧٨ AU$',
             '(١٢٣٤٥٦٧٨)',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$', // non-breaking spaces
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$', // breaking spaces
             '١٢٬٣٤٥٬٦٧٨٫٩٠',
         ];
         $output['EUR']['en-AU'] = [
-            'EUR 12,345,678.90',
-            '-EUR 12,345,678.90',
-            'EUR 12,345,678.90',
-            '(EUR 12,345,678.90)',
-            '+EUR 12,345,678.90',
+            'EUR 12,345,678.90',
+            '-EUR 12,345,678.90',
+            'EUR 12,345,678.90',
+            '(EUR 12,345,678.90)',
+            '+EUR 12,345,678.90',
             '12,345,678.90',
-            'EUR 12,345,678.00',
-            'EUR 12,345,678.90',
-            'EUR 12,345,678',
-            'EUR 12345678.00',
-            'EUR 0.00',
-            'EUR 12345678',
+            'EUR 12,345,678.00',
+            'EUR 12,345,678.90',
+            'EUR 12,345,678',
+            'EUR 12345678.00',
+            'EUR 0.00',
+            'null',
+            'EUR 12345678',
             '(12345678)',
-            'EUR 12,345,678.90', // non-breaking spaces
+            'EUR 12,345,678.90', // breaking spaces
             '12,345,678.90',
         ];
         $output['EUR']['fr'] = [
-            '12 345 678,90 €',
-            '-12 345 678,90 €',
-            '12 345 678,90 €',
-            '(12 345 678,90 €)',
-            '+12 345 678,90 €',
-            '12 345 678,90',
-            '12 345 678,00 €',
-            '12 345 678,90 €',
-            '12 345 678 €',
-            '12345678,00 €',
-            '0,00 €',
-            '12345678 €',
+            '12 345 678,90 €',
+            '-12 345 678,90 €',
+            '12 345 678,90 €',
+            '(12 345 678,90 €)',
+            '+12 345 678,90 €',
+            '12 345 678,90',
+            '12 345 678,00 €',
+            '12 345 678,90 €',
+            '12 345 678 €',
+            '12345678,00 €',
+            '0,00 €',
+            'null',
+            '12345678 €',
             '(12345678)',
-            '12 345 678,90 €', // non-breaking spaces
-            '12 345 678,90', // non-breaking spaces
+            '12 345 678,90 €', // breaking spaces
+            '12 345 678,90', // breaking spaces
         ];
         $output['EUR']['de'] = [
-            '12.345.678,90 €',
-            '-12.345.678,90 €',
-            '12.345.678,90 €',
-            '(12.345.678,90 €)',
-            '+12.345.678,90 €',
+            '12.345.678,90 €',
+            '-12.345.678,90 €',
+            '12.345.678,90 €',
+            '(12.345.678,90 €)',
+            '+12.345.678,90 €',
             '12.345.678,90',
-            '12.345.678,00 €',
-            '12.345.678,90 €',
-            '12.345.678 €',
-            '12345678,00 €',
-            '0,00 €',
-            '12345678 €',
+            '12.345.678,00 €',
+            '12.345.678,90 €',
+            '12.345.678 €',
+            '12345678,00 €',
+            '0,00 €',
+            'null',
+            '12345678 €',
             '(12345678)',
-            '12.345.678,90 €', // non-breaking spaces
+            '12.345.678,90 €', // breaking spaces
             '12.345.678,90',
         ];
         $output['INR']['en-IN'] = [
-            '₹ 1,23,45,678.90',
-            '-₹ 1,23,45,678.90',
-            '₹ 1,23,45,678.90',
-            '(₹ 1,23,45,678.90)',
-            '+₹ 1,23,45,678.90',
+            '₹ 1,23,45,678.90',
+            '-₹ 1,23,45,678.90',
+            '₹ 1,23,45,678.90',
+            '(₹ 1,23,45,678.90)',
+            '+₹ 1,23,45,678.90',
             '1,23,45,678.90',
-            '₹ 1,23,45,678.00',
-            '₹ 1,23,45,678.90',
-            '₹ 1,23,45,678',
-            '₹ 12345678.00',
-            '₹ 0.00',
-            '₹ 12345678',
+            '₹ 1,23,45,678.00',
+            '₹ 1,23,45,678.90',
+            '₹ 1,23,45,678',
+            '₹ 12345678.00',
+            '₹ 0.00',
+            'null',
+            '₹ 12345678',
             '(12345678)',
-            '₹ 1,23,45,678.90', // non-breaking spaces
+            '₹ 1,23,45,678.90', // breaking spaces
             '1,23,45,678.90',
         ];
         $output['ILS']['he'] = [
-            '‏12,345,678.90 ₪',
-            '‏‎-12,345,678.90 ₪',
-            '‏12,345,678.90 ₪',
-            '(‏12,345,678.90 ₪)',
-            '‏‎+12,345,678.90 ₪',
+            '‏12,345,678.90 ₪',
+            '‏‎-12,345,678.90 ₪',
+            '‏12,345,678.90 ₪',
+            '(‏12,345,678.90 ₪)',
+            '‏‎+12,345,678.90 ₪',
             '‏12,345,678.90',
-            '‏12,345,678.00 ₪',
-            '‏12,345,678.90 ₪',
-            '‏12,345,678 ₪',
-            '‏12345678.00 ₪',
-            '‏0.00 ₪',
-            '‏12345678 ₪',
+            '‏12,345,678.00 ₪',
+            '‏12,345,678.90 ₪',
+            '‏12,345,678 ₪',
+            '‏12345678.00 ₪',
+            '‏0.00 ₪',
+            'null',
+            '‏12345678 ₪',
             '(‏12345678)',
-            '‏12,345,678.90 ₪', // non-breaking spaces
+            '‏12,345,678.90 ₪', // breaking spaces
             '‏12,345,678.90',
         ];
         $output['EGP']['ar-EG'] = [
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '(١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏)',
-            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '(١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏)',
+            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
             '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
-            '١٢٬٣٤٥٬٦٧٨٫٠٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨ ج.م.‏',
-            '١٢٣٤٥٦٧٨٫٠٠ ج.م.‏',
-            '٠٫٠٠ ج.م.‏',
-            '١٢٣٤٥٦٧٨ ج.م.‏',
+            '١٢٬٣٤٥٬٦٧٨٫٠٠ ج.م.‏',
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '١٢٬٣٤٥٬٦٧٨ ج.م.‏',
+            '١٢٣٤٥٦٧٨٫٠٠ ج.م.‏',
+            '٠٫٠٠ ج.م.‏',
+            'null',
+            '١٢٣٤٥٦٧٨ ج.م.‏',
             '(١٢٣٤٥٦٧٨‏)',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏', // non-breaking spaces
+            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏', // breaking spaces
             '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
         ];
 
@@ -312,40 +344,28 @@ class CurrencyUnitTest extends TestCase
         $return = [];
         foreach (array_keys($output) as $curCode) {
             foreach ($output[$curCode] as $locale => $outputValues) {
-                $return[] = [$locale, $curCode, 12345678.90, 0, $outputValues[0]];
-                $return[] = [$locale, $curCode, -12345678.90, 0, $outputValues[1]];
-                $return[] = [$locale, $curCode, 12345678.90, Currency::ACCT_NEG, $outputValues[2]];
-                $return[] = [$locale, $curCode, -12345678.90, Currency::ACCT_NEG, $outputValues[3]];
-                $return[] = [$locale, $curCode, 12345678.90, Currency::SHOW_PLUS, $outputValues[4]];
-                $return[] = [$locale, $curCode, 12345678.90, Currency::NO_SYMBOL, $outputValues[5]];
-                $return[] = [$locale, $curCode, 12345678.00, 0, $outputValues[6]];
-                $return[] = [$locale, $curCode, 12345678.90, Currency::NO_ZEROS, $outputValues[7]];
-                $return[] = [$locale, $curCode, 12345678.00, Currency::NO_ZEROS, $outputValues[8]];
-                $return[] = [$locale, $curCode, 12345678.00, Currency::NO_THOUSANDS, $outputValues[9]];
-                $return[] = [$locale, $curCode, null, Currency::NULL_AS_ZERO, $outputValues[10]];
-                $return[] = [
-                    $locale,
-                    $curCode,
-                    12345678.00,
-                    Currency::NO_ZEROS | Currency::NO_THOUSANDS,
-                    $outputValues[11]
-                ];
+                $return[] = [$locale, $curCode, 12345678.90, '', $outputValues[0]];
+                $return[] = [$locale, $curCode, -12345678.90, '', $outputValues[1]];
+                $return[] = [$locale, $curCode, 12345678.90, 'accountingNeg', $outputValues[2]];
+                $return[] = [$locale, $curCode, -12345678.90, 'accountingNeg', $outputValues[3]];
+                $return[] = [$locale, $curCode, 12345678.90, 'showPlus', $outputValues[4]];
+                $return[] = [$locale, $curCode, 12345678.90, '!symbol', $outputValues[5]];
+                $return[] = [$locale, $curCode, 12345678.00, '', $outputValues[6]];
+                $return[] = [$locale, $curCode, 12345678.90, '!trailZeros', $outputValues[7]];
+                $return[] = [$locale, $curCode, 12345678.00, '!trailZeros', $outputValues[8]];
+                $return[] = [$locale, $curCode, 12345678.00, '!thousands', $outputValues[9]];
+                $return[] = [$locale, $curCode, null, 'null=0', $outputValues[10]];
+                $return[] = [$locale, $curCode, null, 'null="null"', $outputValues[11]];
+                $return[] = [$locale, $curCode, 12345678.00, '!trailZeros !thousands', $outputValues[12]];
                 $return[] = [
                     $locale,
                     $curCode,
                     -12345678.00,
-                    Currency::NO_SYMBOL | Currency::NO_ZEROS | Currency::NO_THOUSANDS | Currency::ACCT_NEG
-                        | Currency::SHOW_PLUS | Currency::NULL_AS_ZERO | Currency::NULL_AS_STRING,
-                    $outputValues[12]
+                    '!symbol !trailZeros !thousands accountingNeg showPlus null="null"',
+                    $outputValues[13]
                 ];
-                $return[] = [$locale, $curCode, 12345678.90, Currency::NO_BREAK_WHITESPACE, $outputValues[13]];
-                $return[] = [
-                    $locale,
-                    $curCode,
-                    12345678.90,
-                    Currency::NO_BREAK_WHITESPACE | Currency::NO_SYMBOL,
-                    $outputValues[14]
-                ];
+                $return[] = [$locale, $curCode, 12345678.90, 'breaking', $outputValues[14]];
+                $return[] = [$locale, $curCode, 12345678.90, 'breaking !symbol', $outputValues[15]];
             }
         }
 
@@ -359,7 +379,7 @@ class CurrencyUnitTest extends TestCase
 
 
     /**
-     * Test the ways the default locale, immutability non-breaking-whitespace settings are altered
+     * Test the ways the default locale, immutability and default-format settings are altered
      *
      * @test
      * @return void
@@ -373,8 +393,6 @@ class CurrencyUnitTest extends TestCase
         $this->assertSame('en', RealNum::getDefaultLocale());
         $this->assertTrue(Currency::getDefaultImmutability());
         $this->assertTrue(RealNum::getDefaultImmutability());
-        $this->assertFalse(Currency::getDefaultNoBreakWhitespace());
-        $this->assertFalse(RealNum::getDefaultNoBreakWhitespace());
 
         Currency::setDefaultLocale('en-AU');
         RealNum::setDefaultLocale('en-UK');
@@ -386,10 +404,13 @@ class CurrencyUnitTest extends TestCase
         $this->assertFalse(Currency::getDefaultImmutability());
         $this->assertTrue(RealNum::getDefaultImmutability());
 
-        Currency::setDefaultNoBreakWhitespace(true);
-        RealNum::setDefaultNoBreakWhitespace(false);
-        $this->assertTrue(Currency::getDefaultNoBreakWhitespace());
-        $this->assertFalse(RealNum::getDefaultNoBreakWhitespace());
+        // check the default format-settings
+        Currency::resetDefaults();
+        $this->assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::getDefaultFormatSettings());
+        $this->assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::new('USD')->formatSettings); // uses the default
+        Currency::setDefaultFormatSettings($this->altFormatSettings);
+        $this->assertSame($this->altFormatSettings, Currency::getDefaultFormatSettings());
+        $this->assertSame($this->altFormatSettings, Currency::new('USD')->formatSettings); // uses the new default
     }
 
     /**
@@ -509,10 +530,6 @@ class CurrencyUnitTest extends TestCase
         $this->assertTrue(Currency::new('AUD')->immutable); // uses the default
         $this->assertFalse(Currency::new('AUD')->immutable(false)->immutable);
 
-        // noBreakWhitespace
-        $this->assertFalse(Currency::new('AUD')->noBreakWhitespace); // is the default
-        $this->assertTrue(Currency::new('AUD')->noBreakWhitespace(true)->noBreakWhitespace);
-
 
 
         // val (and default currency decPl)
@@ -558,18 +575,18 @@ class CurrencyUnitTest extends TestCase
      *
      * @test
      * @dataProvider localeRenderingDataProvider
-     * @param string      $locale        The locale to use.
-     * @param string      $curCode       The currency to use.
-     * @param float|null  $initialValue  The value to render.
-     * @param integer     $renderOptions The options to use while rendering.
-     * @param string|null $expectedValue The expected render output.
+     * @param string            $locale        The locale to use.
+     * @param string            $curCode       The currency to use.
+     * @param float|null        $initialValue  The value to render.
+     * @param string|array|null $renderOptions The options to use while rendering.
+     * @param string|null       $expectedValue The expected render output.
      * @return void
      */
     public function test_currency_locale_rendering(
         string $locale,
         string $curCode,
         ?float $initialValue,
-        int $renderOptions,
+        $renderOptions,
         ?string $expectedValue
     ): void {
 
@@ -594,7 +611,7 @@ class CurrencyUnitTest extends TestCase
         $this->assertSame('$1.20', (string) $cur1);
 
         $cur1 = Currency::new('NZD', 1.2)->locale('en-AU');
-        $this->assertSame('NZD 1.20', (string) $cur1);
+        $this->assertSame('NZD 1.20', (string) $cur1);
 
         $cur1 = Currency::new('NZD', 1.2)->locale('en-NZ');
         $this->assertSame('$1.20', (string) $cur1);
@@ -615,10 +632,10 @@ class CurrencyUnitTest extends TestCase
             return Currency::new($curCode)->locale('en-AU');
         };
 
-        $this->assertSame('1.2346', $newCur('AUD')->maxDecPl(4)->val('1.234567890')->val);
-        $this->assertSame('1.23', $newCur('AUD')->maxDecPl(4)->val('1.234567890')->maxDecPl(2)->val);
-        $this->assertSame('1.2300', $newCur('AUD')->maxDecPl(2)->val('1.234567890')->maxDecPl(4)->val);
-        $this->assertSame('1.23', $newCur('AUD')->maxDecPl(4)->val('1.234567890')->useCurrencyDecPl()->val);
+        $this->assertSame('1.2346', $newCur('AUD')->customDecPl(4)->val('1.234567890')->val);
+        $this->assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->customDecPl(2)->val);
+        $this->assertSame('1.2300', $newCur('AUD')->customDecPl(2)->val('1.234567890')->customDecPl(4)->val);
+        $this->assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->useCurrencyDecPl()->val);
         $this->assertSame('1.234568', $newCur('AUD')->customDecPl(6)->val('1.234567890')->val);
         $this->assertSame('1.23', $newCur('AUD')->customDecPl(6)->val('1.234567890')->useCurrencyDecPl()->val);
 
@@ -654,7 +671,44 @@ class CurrencyUnitTest extends TestCase
         // test rendering when there are more decimal places than normal
         $currency = $newCur('AUD')->customDecPl(20)->val(5.123456789);
         $this->assertSame('$5.123456789', $currency->format());
-        $this->assertSame('$5.1235', $currency->format(null, 4)); // when the decPl is explicitly specified
+        $this->assertSame('$5.1235', $currency->format('decPl=4')); // when the decPl is explicitly specified
+
+        // test rendering when decPl is specified explicitly
+        $currency = $newCur('AUD')->customDecPl(20)->val(5.983456789);
+        $this->assertSame('$5.983456789', $currency->format('decPl=null trailZeros'));
+        $this->assertSame('$5.983456789', $currency->format('decPl=null')); // defaults to !trailZeros
+        $this->assertSame('$5.983456789', $currency->format('decPl=null !trailZeros'));
+
+        $this->assertSame('$5.983456789000000', $currency->format('decPl=15 trailZeros'));
+        $this->assertSame('$5.983456789000000', $currency->format('decPl=15')); // defaults to trailZeros
+        $this->assertSame('$5.983456789000000', $currency->format('decPl=15 !trailZeros'));
+
+        $this->assertSame('$5.9835', $currency->format('decPl=4 trailZeros')); // rounded
+        $this->assertSame('$5.9835', $currency->format('decPl=4 !trailZeros')); // rounded
+
+        $this->assertSame('$6.0', $currency->format('decPl=1 trailZeros')); // rounded
+        $this->assertSame('$6', $currency->format('decPl=1 !trailZeros')); // rounded
+
+        $this->assertSame('$6', $currency->format('decPl=0 trailZeros')); // rounded
+        $this->assertSame('$6', $currency->format('decPl=0 !trailZeros')); // rounded
+
+        $currency = $newCur('AUD')->customDecPl(20)->val(5);
+        $this->assertSame('$5.00', $currency->format('decPl=null trailZeros'));
+        $this->assertSame('$5.00', $currency->format('decPl=null')); // defaults to !trailZeros
+        $this->assertSame('$5', $currency->format('decPl=null !trailZeros'));
+
+        $this->assertSame('$5.000000000000000', $currency->format('decPl=15 trailZeros'));
+        $this->assertSame('$5.000000000000000', $currency->format('decPl=15')); // defaults to trailZeros
+        $this->assertSame('$5', $currency->format('decPl=15 !trailZeros'));
+
+        $this->assertSame('$5.0000', $currency->format('decPl=4 trailZeros')); // rounded
+        $this->assertSame('$5', $currency->format('decPl=4 !trailZeros')); // rounded
+
+        $this->assertSame('$5.0', $currency->format('decPl=1 trailZeros')); // rounded
+        $this->assertSame('$5', $currency->format('decPl=1 !trailZeros')); // rounded
+
+        $this->assertSame('$5', $currency->format('decPl=0 trailZeros')); // rounded
+        $this->assertSame('$5', $currency->format('decPl=0 !trailZeros')); // rounded
     }
 
     /**
@@ -730,7 +784,7 @@ class CurrencyUnitTest extends TestCase
         $this->assertSame('A$', Currency::new('AUD')->locale('ja-JP')->symbol);
         $this->assertSame('€', Currency::new('EUR')->locale('ja-JP')->symbol);
         $this->assertSame('￥', Currency::new('JPY')->locale('ja-JP')->symbol); // a diff Yen symbol to above
-                                                                                      // because the locale is different
+                                                                                // because the locale is different
         $this->assertSame('A$', Currency::symbol('AUD', 'ja-JP'));
         $this->assertSame('€', Currency::symbol('EUR', 'ja-JP'));
         $this->assertSame('￥', Currency::symbol('JPY', 'ja-JP'));

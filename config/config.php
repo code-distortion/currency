@@ -15,15 +15,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Non-breaking whitespace
+    | Format settings
     |--------------------------------------------------------------------------
     |
-    | Currency can either return strings when formatting with regular
-    | whitespace (like regular space characters), or non-breaking whitespace.
-    | This value determines what will be returned by default.
+    | Currency will use these default settings when format() is called. You
+    | can adjust these by adding values to the string below. You may choose
+    | from the possible values below.
+    |
+    | default: 'symbol thousards !showPlus !accountingNeg !nullString !nullZero !noZeros !breaking'
     |
     */
 
-    'no_break_whitespace' => false,
+    'format_settings' => null,
 
 ];

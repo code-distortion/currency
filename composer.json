@@ -27,8 +27,9 @@
     ],
     "require": {
         "php": "^7.1",
-        "code-distortion/realnum": "^0.1.2",
-        "ext-intl": "*"
+        "ext-intl": "*",
+        "code-distortion/options": "^0.2",
+        "code-distortion/realnum": "^0.2"
     },
     "require-dev": {
         "jchook/phpunit-assert-throws": "^1.0",

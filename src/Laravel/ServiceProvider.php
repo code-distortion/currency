@@ -6,12 +6,13 @@ use CodeDistortion\Currency\Currency;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Events\EventDispatcher;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Throwable;
 
 /**
  * Currency ServiceProvider for Laravel
  */
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Service-provider register method
@@ -67,7 +68,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->updateLocale();
 
         Currency::setDefaultImmutability(config('currency.immutable'));
-        Currency::setDefaultNoBreakWhitespace(config('currency.no_break_whitespace'));
+        Currency::setDefaultFormatSettings(config('currency.format_settings'));
     }
 
     /**

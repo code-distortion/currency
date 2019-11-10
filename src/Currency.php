@@ -2,30 +2,40 @@
 
 namespace CodeDistortion\Currency;
 
+use CodeDistortion\Options\Options;
 use CodeDistortion\RealNum\Base;
 use NumberFormatter;
 use InvalidArgumentException;
+use Throwable;
 
 /**
- * Manage currency values with accuracy, renderable in different locales
+ * Represents currency values, performs calculations & comparisons on them, and renders them in different locales.
  *
- * Represents currency values, performs calculations & comparisons on them, and renders them.
  * @property ?callable $currencyResolver
- * @property string $curCode
- * @property string $symbol
- * @property int $decPl
- * @property ?int $customDecPl
- * @property boolean $usingCustomDecPl
+ * @property string    $curCode
+ * @property string    $symbol
+ * @property int       $decPl
+ * @property ?int      $customDecPl
+ * @property boolean   $usingCustomDecPl
  */
 class Currency extends Base
 {
     /**
-     * The default locale (at the class-level)
-     *
-     * Objects will pick this value up when instantiated.
-     * @var integer|string
+     * The original default format-settings - used when resetting the class-level defaults
      */
-    protected static $defaultLocale = 'en';
+    const ORIG_FORMAT_SETTINGS = [
+        'null' => null,
+        'decPl' => null,
+        'trailZeros' => true,
+        'symbol' => true,
+        'thousands' => true,
+        'showPlus' => false,
+        'accountingNeg' => false,
+        'locale' => 'en',
+        'breaking' => false,
+    ];
+
+
 
     /**
      * The default maximum number of decimal places available to use (at the class-level)
@@ -44,13 +54,22 @@ class Currency extends Base
     protected static $defaultImmutable = true;
 
     /**
-     * The default non-breaking-whitespace setting (at the class-level).
+     * The default settings to use when formatting the number (at the class-level).
      *
-     * Used when formatting a number.
      * Objects will pick this value up when instantiated.
-     * @var boolean
+     * @var array
      */
-    protected static $defaultNoBreakWhitespace = false;
+    protected static $defaultFormatSettings = [
+        'null' => null,
+        'decPl' => null,
+        'trailZeros' => true,
+        'symbol' => true,
+        'thousands' => true,
+        'showPlus' => false,
+        'accountingNeg' => false,
+        'locale' => 'en',
+        'breaking' => false,
+    ];
 
 
 
@@ -109,61 +128,6 @@ class Currency extends Base
      * @var array
      */
     protected static $currencySymbols = [];
-
-
-
-
-
-    /**
-     * Affects formatting - don't show the decimal places when there is no decimal place value
-     */
-    const NO_ZEROS = 1;
-
-    /**
-     * Affects formatting - show the trailing zeros at the end of the decimal numbers
-     */
-    // const SHOW_DECIMAL_ZEROS = 2;
-
-    /**
-     * Affects formatting - removes the thousands separator
-     */
-    const NO_THOUSANDS = 4;
-
-    /**
-     * Affects formatting - the plus is normally omitted (unlike a negative minus),
-     * show the plus sign for positive values
-     */
-    const SHOW_PLUS = 8;
-
-    /**
-     * Affects formatting - show positive and negative values in accounting format
-     * (ie. show negative numbers in brackets)
-     */
-    const ACCT_NEG = 16;
-
-    /**
-     * Affects formatting - will return 0 instead of null
-     */
-    const NULL_AS_ZERO = 32;
-
-    /**
-     * Affects formatting - should (the string) "null" be rendered for null values (otherwise actual null is returned)
-     */
-    const NULL_AS_STRING = 64;
-
-    /**
-     * Affects formatting - normally non-breaking spaces and other characters are returned as regular spaces. using this
-     * will leave them as they were
-     *
-     */
-    const NO_BREAK_WHITESPACE = 128;
-
-    /**
-     * Affects formatting - don't use the currency symbol
-     */
-    const NO_SYMBOL = 256;
-
-
 
 
 
@@ -423,50 +387,55 @@ class Currency extends Base
     {
         return static::renderSymbol(
             static::resolveCurrencyCode($curCode),
-            static::resolveLocaleCode(mb_strlen((string) $locale) ? $locale : static::$defaultLocale)
+            static::resolveLocaleCode(mb_strlen((string) $locale) ? $locale : static::getDefaultLocale())
         );
     }
 
     /**
-     * Format the current number in a readable way
+     * Format the current value in a readable way
      *
-     * @param integer|null $options The render options made up from Currency constants (eg. Currency::NO_THOUSANDS).
-     * @param integer|null $decPl   The number of decimal places to render to.
+     * @param string|array|null $options The options to use when rendering the number.
      * @return string
      */
-    public function format(?int $options = 0, int $decPl = null): ?string
+    public function format($options = null): ?string
     {
         $value = $this->getVal();
-        $options = (int) $options;
-        $curCode = static::resolveCurrencyCode($this->curCode);
+        $parsedOptions = Options::parse($options);
+        $resolvedOptions = Options::defaults($this->formatSettings)->resolve($parsedOptions);
 
-        // render nulls as 0 if desired
-        if (((!is_string($value)) || (!mb_strlen($value)))
-        && ((bool) ($options & static::NULL_AS_ZERO))) {
-            $value = '0';
+        // customise what happens when the value is null
+        if ((!is_string($value)) || (!mb_strlen($value))) {
+            try {
+                $value = static::extractBasicValue(
+                    $resolvedOptions['null'],
+                    $this->internalMaxDecPl(),
+                    false // don't pick up a 'null' string as null
+                );
+            } catch (Throwable $e) {
+                return $resolvedOptions['null']; // it could be a string like 'null'
+            }
         }
 
+        // render the value if it's a number
+        $curCode = static::resolveCurrencyCode($this->curCode);
         if (($curCode) && (is_string($value)) && (mb_strlen($value))) {
 
-            $removeDecimalsWhenZero = (bool) ($options & static::NO_ZEROS);
-            // $showAllDecimalDigits   = true; // shows more decimal digits (if present) than the currency normally has
-            $noThousands            = (bool) ($options & static::NO_THOUSANDS);
-            $showPlus               = (bool) ($options & static::SHOW_PLUS);
-            $accountingNegative     = (bool) ($options & static::ACCT_NEG);
-            $noSymbol               = (bool) ($options & static::NO_SYMBOL);
-            // otherwise fall back to the current non-breaking-whitespace setting
-            $noBreakWhitespace      = (($options & static::NO_BREAK_WHITESPACE)
-                                        ? true
-                                        : $this->effectiveNoBreakWhitespace());
-
-            $locale   = $this->effectiveLocale();
-            $curCode  = strtoupper($curCode);
+            $locale = $this->resolveLocaleCode($resolvedOptions['locale']); // locale can be specified by the caller
+            $curCode = strtoupper($curCode);
+            $showSymbol = (bool) $resolvedOptions['symbol'];
+            $decPl = $resolvedOptions['decPl'];
             $maxDecPl = $this->internalMaxDecPl();
 
 
 
-            // if no decPl was explicitly specified then...
-            if (is_null($decPl)) {
+            // if decPl was specified then force trailZeros to be on
+            if (!is_null($decPl)) {
+                // (as long as the caller didn't explicitly pass a trailZeros setting in the first place)
+                if (!array_key_exists('trailZeros', $parsedOptions)) {
+                    $resolvedOptions['trailZeros'] = true;
+                }
+            // otherwise use the normal number of decimal places, and leave trailZeros alone
+            } else {
 
                 // start with the currency's normal number of decimal places
                 $decPl = static::determineCurrencyDecPl($curCode);
@@ -476,17 +445,17 @@ class Currency extends Base
                     // have at least the number the currency has - but possibly more
                     $decPl = max($decPl, static::howManyDecimalPlaces($value));
                 // }
+            }
 
-                // if desired by the caller and the number has no decimal value, remove the decimal digits
-                if ($removeDecimalsWhenZero) {
-                    if (static::roundCalculation($value, 0, $maxDecPl)         // check if the whole number
-                    === static::roundCalculation($value, $decPl, $maxDecPl)) { // equals the num to the correct decPl
+            // remove trailing zeros if desired and there is no decimal value
+            if (!$resolvedOptions['trailZeros']) {
+                if (static::roundCalculation($value, 0, $maxDecPl)         // check if the whole number
+                === static::roundCalculation($value, $decPl, $maxDecPl)) { // equals the num to the correct decPl
 
-                        // @todo this isn't respected when showing currency values in currencies that don't belong to
-                        // the locale (or something like this) and may need to be compensated for (ie. php code to
-                        // correct). this seems to be an ICU 57.1 bug (see https://bugs.php.net/bug.php?id=63140 )
-                        $decPl = 0;
-                    }
+                    // @todo this isn't respected when showing currency values in currencies that don't belong to
+                    // the locale (or something like this) and may need to be compensated for (ie. php code to
+                    // correct). this seems to be an ICU 57.1 bug (see https://bugs.php.net/bug.php?id=63140 )
+                    $decPl = 0;
                 }
             }
 
@@ -495,18 +464,18 @@ class Currency extends Base
             $numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
             $numberFormatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $decPl);
             // remove the thousands separator if desired
-            if ($noThousands) {
+            if (!$resolvedOptions['thousands']) {
                 $numberFormatter->setAttribute(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, null);
             }
 
 
 
             // render the number
-            $callback = function ($value) use ($numberFormatter, $curCode, $locale, $noSymbol) {
+            $callback = function ($value) use ($numberFormatter, $curCode, $locale, $showSymbol) {
                 $number = $numberFormatter->formatCurrency($value, $curCode);
 
                 // remove the currency symbol if desired
-                if ($noSymbol) {
+                if (!$showSymbol) {
                     $symbol = static::renderSymbol($curCode, $locale);
 
                     // remove LEFT-TO-RIGHT MARK, RIGHT-TO-LEFT MARK from the symbol
@@ -529,9 +498,9 @@ class Currency extends Base
                 $value,
                 $maxDecPl,
                 $locale,
-                $accountingNegative,
-                $showPlus,
-                $noBreakWhitespace,
+                (bool) $resolvedOptions['accountingNeg'],
+                (bool) $resolvedOptions['showPlus'],
+                (bool) $resolvedOptions['breaking'],
                 $numberFormatter,
                 $callback
             );
@@ -539,8 +508,7 @@ class Currency extends Base
             return $return;
         }
 
-        $showNull = (bool) ($options & static::NULL_AS_STRING);
-        return ($showNull ? 'null' : null);
+        return null;
     }
 
 
