@@ -273,33 +273,6 @@ class Currency extends Base
         return parent::__get($name);
     }
 
-    /**
-     * Set various values stored in this object
-     *
-     * @param string $name  The name of the value to set.
-     * @param mixed  $value The value to store.
-     * @return void
-     */
-    // public function __set(string $name, $value)
-    // {
-    //     this object may be immutable so don't allow it to be updated like this
-    //     switch ($name) {
-
-    //         // set the currencyResolver
-    //         case 'currencyResolver':
-    //             static::$currencyResolver = $value;
-    //             return;
-
-    //         // set the locale
-    //         case 'curCode':
-    //             $this->setCurCode($value);
-    //             return;
-    //     }
-
-    //     // see if the parent class can handle this
-    //     parent::__set($name, $value);
-    // }
-
 
 
 
