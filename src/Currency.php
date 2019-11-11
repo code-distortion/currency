@@ -446,7 +446,7 @@ class Currency extends Base
     {
         $value = $this->getVal();
         $parsedOptions = Options::parse($options);
-        $resolvedOptions = Options::defaults($this->formatSettings)->resolve($parsedOptions);
+        $resolvedOptions = Options::defaults($this->formatSettings)->resolve($parsedOptions)->all();
 
         // customise what happens when the value is null
         if ((!is_string($value)) || (!mb_strlen($value))) {

@@ -28,7 +28,7 @@
     "require": {
         "php": "^7.1",
         "ext-intl": "*",
-        "code-distortion/options": "^0.2",
+        "code-distortion/options": "^0.3",
         "code-distortion/realnum": "^0.3"
     },
     "require-dev": {

@@ -6,12 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
+## [0.2.0] - 2019-11-12
+
+### Changed (breaking)
+- Updated the use of code-distortion/options which has changed ->resolve(x) to be chainable
+
+
+
 ## [0.2.0] - 2019-11-11
 
 ### Added
 - Updates to documentation
 
-### Changed
+### Changed (breaking)
 - Altered format() to use code-distortion/options based option values
 - Changed locale, noBreakWhitespace and decPl to be format-settings
 - Swapped instantiation parameters $curCode and $value
