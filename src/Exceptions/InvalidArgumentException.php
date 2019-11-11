@@ -12,10 +12,10 @@ class InvalidArgumentException extends BaseInvalidArgumentException
     /**
      * Return a new instance when a currency couldn't be resolved
      *
-     * @param string $currencyIdentifier The currency being resolved.
+     * @param mixed $currencyIdentifier The currency being resolved.
      * @return static
      */
-    public static function unresolveableCurrency(string $currencyIdentifier): self
+    public static function unresolveableCurrency($currencyIdentifier): self
     {
         return new static('Currency "'.$currencyIdentifier.'" could not be resolved');
     }
