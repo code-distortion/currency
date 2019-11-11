@@ -54,7 +54,7 @@ print $cur2->format();       // "$9,999.99"
 
 ### Default currency-code
 
-The default currency-code isn't set to begin with but one can be chosen. This has been done so that as a developer you will have to either:
+The default currency-code isn't set to begin with but one can be chosen. This is so that as a developer you will have to either:
 
 - consciously specify the currency-code for each use (perhaps stored with each amount in your database).  Useful when a website deals with multiple currencies.
 - or consciously choose a default - useful when the application won't need multiple-currencies.

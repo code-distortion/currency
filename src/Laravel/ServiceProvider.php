@@ -67,6 +67,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->updateLocale();
 
+        Currency::setDefaultCurCode(config('currency.default_currency_code'));
         Currency::setDefaultImmutability(config('currency.immutable'));
         Currency::setDefaultFormatSettings(config('currency.format_settings'));
     }

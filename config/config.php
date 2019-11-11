@@ -4,6 +4,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default currency
+    |--------------------------------------------------------------------------
+    |
+    | This is the default currency code that Currency will use for new objects.
+    | When it's left blank, the currency code will need to be specified for
+    | each Currency object.
+    |
+    | eg. 'USD'
+    |
+    */
+
+    'default_currency_code' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Immutability
     |--------------------------------------------------------------------------
     |
