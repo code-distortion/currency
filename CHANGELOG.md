@@ -6,14 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
-## [0.2.1] - 2019-11-13
+## [0.3.1] - 2019-11-13
 
 ### Changed
 - Added custom exceptions
 
 
 
-## [0.2.0] - 2019-11-12
+## [0.3.0] - 2019-11-12
+
+### Added
+- Added default_currency_code to the Laravel config file
 
 ### Changed (breaking)
 - Updated the use of code-distortion/options which has changed ->resolve(x) to be chainable
