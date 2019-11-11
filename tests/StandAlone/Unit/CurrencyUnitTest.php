@@ -2,16 +2,13 @@
 
 namespace CodeDistortion\Currency\Tests\StandAlone\Unit;
 
-use ArgumentCountError;
 use CodeDistortion\Currency\Currency;
+use CodeDistortion\Currency\Exceptions\InvalidArgumentException;
 use CodeDistortion\Currency\Tests\StandAlone\TestCase;
+use CodeDistortion\RealNum\Exceptions\InvalidArgumentException as RealNumInvalidArgumentException;
+use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use CodeDistortion\RealNum\RealNum;
-use ErrorException;
-use Exception;
-use InvalidArgumentException;
-//use Mockery\Mockery;
 use PHPUnit\Framework\Error\Warning;
-use RuntimeException;
 use stdClass;
 
 /**
@@ -880,17 +877,17 @@ class CurrencyUnitTest extends TestCase
         $this->assertSame(5, Currency::new($cur2, 'AUD')->cast);
 
         // initial value is invalid - boolean
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
             Currency::new(true, 'AUD'); // phpstan false positive
         });
 
         // initial value is invalid - non-numeric string
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
             Currency::new('abc', 'AUD');
         });
 
         // initial value is invalid - object
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
             Currency::new(new stdClass(), 'AUD'); // phpstan false positive
         });
     }
@@ -904,23 +901,23 @@ class CurrencyUnitTest extends TestCase
     public function test_currency_exceptions(): void
     {
         // (pseudo-)property abc doesn't exist to get
-        $this->assertThrows(ErrorException::class, function () {
+        $this->assertThrows(UndefinedPropertyException::class, function () {
             Currency::new(null, 'AUD')->abc; // phpstan false positive
         });
 
         // (pseudo-)property abc doesn't exist to SET
-        // $this->assertThrows(ErrorException::class, function () {
+        // $this->assertThrows(UndefinedPropertyException::class, function () {
         //     $currency = Currency::new('AUD');
         //     $currency->abc = true; // phpstan false positive
         // });
 
         // no currency given
-        $this->assertThrows(Exception::class, function () {
+        $this->assertThrows(InvalidArgumentException::class, function () {
             $currency = Currency::new(); // phpstan false positive
         });
 
         // invalid value to add
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
             Currency::new(null, 'AUD')->add(true); // phpstan false positive
         });
 

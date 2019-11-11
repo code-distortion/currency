@@ -2,11 +2,10 @@
 
 namespace CodeDistortion\Currency;
 
+use CodeDistortion\Currency\Exceptions\InvalidArgumentException;
 use CodeDistortion\Options\Options;
 use CodeDistortion\RealNum\Base;
-use Exception;
 use NumberFormatter;
-use InvalidArgumentException;
 use Throwable;
 
 /**
@@ -154,14 +153,14 @@ class Currency extends Base
      * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
-     * @throws Exception Thrown when a curCode wasn't passed and no default hasn't been specified.
+     * @throws InvalidArgumentException Thrown when a curCode wasn't passed and no default hasn't been specified.
      */
     public function __construct($value = null, $curCode = null, bool $throwException = true)
     {
         // fall-back to the default curCode if needed
         if (is_null($curCode)) {
             if (is_null(static::$defaultCurCode)) {
-                throw new Exception('Currency-code was not specified. Please pass one or specify a default');
+                throw InvalidArgumentException::currencyNotSpecified();
             }
             $curCode = static::$defaultCurCode;
         }
@@ -352,7 +351,7 @@ class Currency extends Base
             return $currencyIdentifier;
         }
 
-        throw new InvalidArgumentException('Currency code "'.$currencyIdentifier.'" could not be resolved');
+        throw InvalidArgumentException::unresolveableCurrency($currencyIdentifier);
     }
 
 
@@ -691,21 +690,21 @@ class Currency extends Base
     protected function ensureCompatibleValue($value, bool $throwException = true): bool
     {
         // this object is compatible with other objects of the same type
-        $exceptionMsg = null;
+        $exception = null;
         if ((is_object($value)) && ($value instanceof static)) {
 
             // the object must have the same curCode
             if ($value->curCode != $this->curCode) {
-                $exceptionMsg = 'Currency code mismatch - '.$value->curCode.' is not compatible with '.$this->curCode;
+                $exception = InvalidArgumentException::incompatibleCurrencies($value->curCode, $this->curCode);
             }
         }
 
         // check if an error was found
-        if (is_string($exceptionMsg)) {
+        if (!is_null($exception)) {
 
             // throw an exception if necessary
             if ($throwException) {
-                throw new InvalidArgumentException($exceptionMsg);
+                throw $exception;
             }
             return false;
         }
