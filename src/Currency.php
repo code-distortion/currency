@@ -2,9 +2,12 @@
 
 namespace CodeDistortion\Currency;
 
-use CodeDistortion\Currency\Exceptions\InvalidArgumentException;
+use CodeDistortion\Currency\Exceptions\InvalidCurrencyException;
 use CodeDistortion\Options\Options;
 use CodeDistortion\RealNum\Base;
+use CodeDistortion\RealNum\Exceptions\InvalidLocaleException;
+use CodeDistortion\RealNum\Exceptions\InvalidValueException;
+use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use NumberFormatter;
 use Throwable;
 
@@ -143,9 +146,6 @@ class Currency extends Base
     protected static $currencySymbols = [];
 
 
-
-
-
     /**
      * Constructor
      *
@@ -153,14 +153,17 @@ class Currency extends Base
      * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
-     * @throws InvalidArgumentException Thrown when a curCode wasn't passed and no default hasn't been specified.
+     *
+     * @throws InvalidCurrencyException Thrown when a curCode wasn't passed and no default hasn't been specified.
+     * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
      */
     public function __construct($value = null, $curCode = null, bool $throwException = true)
     {
         // fall-back to the default curCode if needed
         if (is_null($curCode)) {
             if (is_null(static::$defaultCurCode)) {
-                throw InvalidArgumentException::currencyNotSpecified();
+
+                throw InvalidCurrencyException::currencyNotSpecified();
             }
             $curCode = static::$defaultCurCode;
         }
@@ -176,7 +179,10 @@ class Currency extends Base
      * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
+     *
      * @return static
+     * @throws InvalidCurrencyException Thrown when a curCode wasn't passed and no default hasn't been specified.
+     * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
      */
     public static function new($value = null, $curCode = null, bool $throwException = true)
     {
@@ -226,17 +232,16 @@ class Currency extends Base
     }
 
 
-
-
-
-
-
     /**
      * Get various values stored in this object
      *
-     * @internal
      * @param string $name The field to get.
+     *
      * @return mixed
+     * @throws InvalidCurrencyException   Thrown when the currency cannot be resolved.
+     * @throws UndefinedPropertyException Thrown when accessing an invalid field.
+     * @throws InvalidLocaleException     Thrown when the locale cannot be resolved.
+     * @internal
      */
     public function __get(string $name)
     {
@@ -267,10 +272,13 @@ class Currency extends Base
             // return whether a custom number of decimal places is set
             case 'usingCustomDecPl':
                 return $this->usingCustomDecPl();
-        }
 
-        // see if the parent can handle this
-        return parent::__get($name);
+
+
+            // see if the parent can handle this
+            default:
+                return parent::__get($name);
+        }
     }
 
 
@@ -293,7 +301,7 @@ class Currency extends Base
     /**
      * Return the currencyResolver
      *
-     * @return ?callable
+     * @return callable|null
      */
     public static function getCurrencyResolver(): ?callable
     {
@@ -305,7 +313,7 @@ class Currency extends Base
      *
      * @param integer|string|null $currencyIdentifier The currency to resolve.
      * @return string
-     * @throws InvalidArgumentException Thrown when the $currencyIdentifier can not be resolved.
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      */
     protected static function resolveCurrencyCode($currencyIdentifier): string
     {
@@ -324,13 +332,8 @@ class Currency extends Base
             return $currencyIdentifier;
         }
 
-        throw InvalidArgumentException::unresolveableCurrency($currencyIdentifier);
+        throw InvalidCurrencyException::unresolveableCurrency($currencyIdentifier);
     }
-
-
-
-
-
 
 
     /**
@@ -338,6 +341,7 @@ class Currency extends Base
      *
      * @param integer|string $curCode The currency code to set.
      * @return static
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      */
     public function curCode($curCode): self
     {
@@ -385,6 +389,7 @@ class Currency extends Base
      *
      * @param integer|string $curCode The currency to use.
      * @return integer|null
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      */
     public static function currencyDecPl($curCode): ?int
     {
@@ -398,7 +403,10 @@ class Currency extends Base
      *
      * @param integer|string      $curCode The currency to get the symbol for.
      * @param integer|string|null $locale  The locale to use when getting the symbol.
+     *
      * @return string
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
+     * @throws InvalidLocaleException   Thrown when the locale cannot be resolved.
      */
     public static function symbol($curCode, $locale = null): string
     {
@@ -412,7 +420,10 @@ class Currency extends Base
      * Format the current value in a readable way
      *
      * @param string|array|null $options The options to use when rendering the number.
+     *
      * @return string
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
+     * @throws InvalidLocaleException   Thrown when the locale cannot be resolved.
      */
     public function format($options = null): ?string
     {
@@ -639,6 +650,7 @@ class Currency extends Base
      *
      * @param mixed $curCode The currency to use.
      * @return static
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      */
     protected function setCurCode($curCode): self
     {
@@ -655,10 +667,13 @@ class Currency extends Base
      * Check if the passed value is compatible for operations on this object
      *
      * (This may be overridden by child classes)
+     *
      * @param mixed   $value          The value to check against the value stored in this object.
      * @param boolean $throwException Should an exception be raised if the given value isn't valid?.
+     *
      * @return boolean
-     * @throws InvalidArgumentException Thrown when the given value is invalid (and $throwException is true).
+     * @throws InvalidCurrencyException Thrown when the given value is invalid (and $throwException is true).
+     * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
      */
     protected function ensureCompatibleValue($value, bool $throwException = true): bool
     {
@@ -668,7 +683,7 @@ class Currency extends Base
 
             // the object must have the same curCode
             if ($value->curCode != $this->curCode) {
-                $exception = InvalidArgumentException::incompatibleCurrencies($value->curCode, $this->curCode);
+                $exception = InvalidCurrencyException::incompatibleCurrencies($value->curCode, $this->curCode);
             }
         }
 
@@ -687,12 +702,12 @@ class Currency extends Base
     }
 
 
-
     /**
      * Use the given currency, but use the current one if needed
      *
      * @param integer|string|null $currencyIdentifier The currency to force (otherwise the current one is used).
      * @return string
+     * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      */
     protected function effectiveCurCode($currencyIdentifier = null): string
     {

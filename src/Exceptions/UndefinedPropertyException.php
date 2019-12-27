@@ -8,7 +8,7 @@ use Exception;
 /**
  * Exception for when undefined properties are accessed
  */
-class UndefinedPropertyException extends Exception
+class UndefinedPropertyException extends CurrencyException
 {
     use ExceptionTrait;
 

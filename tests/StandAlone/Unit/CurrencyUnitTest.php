@@ -3,9 +3,8 @@
 namespace CodeDistortion\Currency\Tests\StandAlone\Unit;
 
 use CodeDistortion\Currency\Currency;
-use CodeDistortion\Currency\Exceptions\InvalidArgumentException;
 use CodeDistortion\Currency\Tests\StandAlone\TestCase;
-use CodeDistortion\RealNum\Exceptions\InvalidArgumentException as RealNumInvalidArgumentException;
+use CodeDistortion\RealNum\Exceptions\InvalidValueException as RealNumInvalidValueException;
 use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use CodeDistortion\RealNum\RealNum;
 use PHPUnit\Framework\Error\Warning;
@@ -877,17 +876,17 @@ class CurrencyUnitTest extends TestCase
         $this->assertSame(5, Currency::new($cur2, 'AUD')->cast);
 
         // initial value is invalid - boolean
-        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidValueException::class, function () {
             Currency::new(true, 'AUD'); // phpstan false positive
         });
 
         // initial value is invalid - non-numeric string
-        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidValueException::class, function () {
             Currency::new('abc', 'AUD');
         });
 
         // initial value is invalid - object
-        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidValueException::class, function () {
             Currency::new(new stdClass(), 'AUD'); // phpstan false positive
         });
     }
@@ -917,7 +916,7 @@ class CurrencyUnitTest extends TestCase
         });
 
         // invalid value to add
-        $this->assertThrows(RealNumInvalidArgumentException::class, function () {
+        $this->assertThrows(RealNumInvalidValueException::class, function () {
             Currency::new(null, 'AUD')->add(true); // phpstan false positive
         });
 

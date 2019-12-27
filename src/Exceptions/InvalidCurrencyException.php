@@ -2,12 +2,10 @@
 
 namespace CodeDistortion\Currency\Exceptions;
 
-use CodeDistortion\RealNum\Exceptions\InvalidArgumentException as BaseInvalidArgumentException;
-
 /**
- * Exception for when invalid arguments are passed
+ * Exception for when an invalid currency is found
  */
-class InvalidArgumentException extends BaseInvalidArgumentException
+class InvalidCurrencyException extends CurrencyException
 {
     /**
      * Return a new instance when a currency couldn't be resolved
