@@ -27,7 +27,7 @@ If you would like to work with regular *floating-point* or *percentage* values, 
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require code-distortion/currency
@@ -54,10 +54,7 @@ print $cur2->format();       // "$9,999.99"
 
 ### Default currency-code
 
-The default currency-code isn't set to begin with but one can be chosen. This is so that as a developer you will have to either:
-
-- consciously specify the currency-code for each use (perhaps stored with each amount in your database).  Useful when a website deals with multiple currencies.
-- or consciously choose a default - useful when the application won't need multiple-currencies.
+The default currency-code isn't set to begin with but you can choose one. If you use Laravel this may be set in the /config/currency.php config file. See the [Laravel](#laravel) section below for more details. Otherwise you may:
 
 ``` php
 Currency::new(5, 'USD'); // ok - $5 USD
@@ -456,9 +453,9 @@ Currency integrates with Laravel 5.5+ automatically thanks to Laravel's package 
 
 ``` php
 'providers' => [
-  …
-CodeDistortion\Currency\Laravel\ServiceProvider::class,
-  …
+    …
+    CodeDistortion\Currency\Laravel\ServiceProvider::class,
+    …
 ],
 ```
 
