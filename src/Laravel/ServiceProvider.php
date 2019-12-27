@@ -7,7 +7,6 @@ use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Events\EventDispatcher;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Throwable;
 
 /**
  * Currency ServiceProvider for Laravel
@@ -47,12 +46,14 @@ class ServiceProvider extends BaseServiceProvider
     {
         // initialise the config
         $configPath = __DIR__.'/../../config/config.php';
-        $this->mergeConfigFrom($configPath, 'currency');
+        $this->mergeConfigFrom($configPath, 'code-distortion.currency');
 
         // allow the default config to be published
-        if ($this->app->runningInConsole()) {
+        if ((!$this->app->environment('testing'))
+        && ($this->app->runningInConsole())) {
+
             $this->publishes(
-                [$configPath => config_path('currency.php'),],
+                [$configPath => config_path('code-distortion.currency.php'),],
                 'config'
             );
         }
@@ -67,9 +68,9 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->updateLocale();
 
-        Currency::setDefaultCurCode(config('currency.default_currency_code'));
-        Currency::setDefaultImmutability(config('currency.immutable'));
-        Currency::setDefaultFormatSettings(config('currency.format_settings'));
+        Currency::setDefaultCurCode(config('code-distortion.currency.default_currency_code'));
+        Currency::setDefaultImmutability(config('code-distortion.currency.immutable'));
+        Currency::setDefaultFormatSettings(config('code-distortion.currency.format_settings'));
     }
 
     /**
