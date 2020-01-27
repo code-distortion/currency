@@ -8,12 +8,14 @@ use CodeDistortion\Currency\Tests\StandAlone\TestCase;
 use CodeDistortion\RealNum\Exceptions\InvalidValueException as RealNumInvalidValueException;
 use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use CodeDistortion\RealNum\RealNum;
+use PHPUnit\Framework\Constraint\Exception as ConstraintException;
 use PHPUnit\Framework\Error\Warning;
 use stdClass;
 
 /**
  * Test the Currency library class
  *
+ * @group standalone
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  */
 class CurrencyUnitTest extends TestCase
@@ -876,20 +878,24 @@ class CurrencyUnitTest extends TestCase
         $cur2 = Currency::new(5, 'AUD');
         $this->assertSame(5, Currency::new($cur2, 'AUD')->cast);
 
-        // initial value is invalid - boolean
-        $this->assertThrows(RealNumInvalidValueException::class, function () {
-            Currency::new(true, 'AUD'); // phpstan false positive
-        });
+        // PHPUnit\Framework\Constraint\Exception is required by jchook/phpunit-assert-throws
+        if (class_exists(ConstraintException::class)) {
 
-        // initial value is invalid - non-numeric string
-        $this->assertThrows(RealNumInvalidValueException::class, function () {
-            Currency::new('abc', 'AUD');
-        });
+            // initial value is invalid - boolean
+            $this->assertThrows(RealNumInvalidValueException::class, function () {
+                Currency::new(true, 'AUD'); // phpstan false positive
+            });
 
-        // initial value is invalid - object
-        $this->assertThrows(RealNumInvalidValueException::class, function () {
-            Currency::new(new stdClass(), 'AUD'); // phpstan false positive
-        });
+            // initial value is invalid - non-numeric string
+            $this->assertThrows(RealNumInvalidValueException::class, function () {
+                Currency::new('abc', 'AUD');
+            });
+
+            // initial value is invalid - object
+            $this->assertThrows(RealNumInvalidValueException::class, function () {
+                Currency::new(new stdClass(), 'AUD'); // phpstan false positive
+            });
+        }
     }
 
     /**
@@ -900,66 +906,71 @@ class CurrencyUnitTest extends TestCase
      */
     public function test_currency_exceptions(): void
     {
-        // (pseudo-)property abc doesn't exist to get
-        $this->assertThrows(UndefinedPropertyException::class, function () {
-            Currency::new(null, 'AUD')->abc; // phpstan false positive
-        });
 
-        // (pseudo-)property abc doesn't exist to SET
-        // $this->assertThrows(UndefinedPropertyException::class, function () {
-        //     $currency = Currency::new('AUD');
-        //     $currency->abc = true; // phpstan false positive
-        // });
+        // PHPUnit\Framework\Constraint\Exception is required by jchook/phpunit-assert-throws
+        if (class_exists(ConstraintException::class)) {
 
-        // no currency given
-        $this->assertThrows(InvalidCurrencyException::class, function () {
-            $currency = Currency::new(); // phpstan false positive
-        });
+            // (pseudo-)property abc doesn't exist to get
+            $this->assertThrows(UndefinedPropertyException::class, function () {
+                Currency::new(null, 'AUD')->abc; // phpstan false positive
+            });
 
-        // invalid value to add
-        $this->assertThrows(RealNumInvalidValueException::class, function () {
-            Currency::new(null, 'AUD')->add(true); // phpstan false positive
-        });
+            // (pseudo-)property abc doesn't exist to SET
+            // $this->assertThrows(UndefinedPropertyException::class, function () {
+            //     $currency = Currency::new('AUD');
+            //     $currency->abc = true; // phpstan false positive
+            // });
 
-        // division by 0
-        $this->assertThrows(Warning::class, function () {
-            Currency::new(1, 'AUD')->div(0);
-        });
+            // no currency given
+            $this->assertThrows(InvalidCurrencyException::class, function () {
+                $currency = Currency::new(); // phpstan false positive
+            });
 
-        // currency mismatch
-        $this->assertThrows(InvalidCurrencyException::class, function () {
-            $cur2 = Currency::new(2.239482390, 'NZD');
-            Currency::new($cur2, 'AUD'); // invalid starting value
-        });
+            // invalid value to add
+            $this->assertThrows(RealNumInvalidValueException::class, function () {
+                Currency::new(null, 'AUD')->add(true); // phpstan false positive
+            });
 
-        // currency mismatch
-        $this->assertThrows(
-            InvalidCurrencyException::class,
-            function () {
-                $cur1 = Currency::new(5, 'AUD');
-                $cur2 = Currency::new(2, 'NZD');
-                $this->assertTrue($cur1->add($cur2));
-            }
-        );
+            // division by 0
+            $this->assertThrows(Warning::class, function () {
+                Currency::new(1, 'AUD')->div(0);
+            });
 
-        // currency mismatch
-        $this->assertThrows(
-            InvalidCurrencyException::class,
-            function () {
-                $cur1 = Currency::new(5, 'AUD');
-                $cur2 = Currency::new(2, 'NZD');
-                $this->assertTrue($cur1->lt($cur2));
-            }
-        );
+            // currency mismatch
+            $this->assertThrows(InvalidCurrencyException::class, function () {
+                $cur2 = Currency::new(2.239482390, 'NZD');
+                Currency::new($cur2, 'AUD'); // invalid starting value
+            });
 
-        // unresolvable currency
-        $this->assertThrows(InvalidCurrencyException::class, function () {
-            Currency::new(null, 1);
-        });
+            // currency mismatch
+            $this->assertThrows(
+                InvalidCurrencyException::class,
+                function () {
+                    $cur1 = Currency::new(5, 'AUD');
+                    $cur2 = Currency::new(2, 'NZD');
+                   $cur1->add($cur2);
+                }
+            );
 
-        // unresolvable currency
-        $this->assertThrows(InvalidCurrencyException::class, function () {
-            Currency::new(null, 'AUD')->curCode(1);
-        });
+            // currency mismatch
+            $this->assertThrows(
+                InvalidCurrencyException::class,
+                function () {
+                    $cur1 = Currency::new(5, 'AUD');
+                    $cur2 = Currency::new(2, 'NZD');
+                    $cur1->lt($cur2);
+                }
+            );
+
+            // unresolvable currency
+            $this->assertThrows(InvalidCurrencyException::class, function () {
+                Currency::new(null, 1);
+            });
+
+            // unresolvable currency
+            $this->assertThrows(InvalidCurrencyException::class, function () {
+                Currency::new(null, 'AUD')->curCode(1);
+            });
+        }
     }
 }

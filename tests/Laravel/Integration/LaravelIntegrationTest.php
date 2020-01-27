@@ -9,6 +9,7 @@ use CodeDistortion\Currency\Tests\Laravel\TestCase;
 /**
  * Test the Currency's integration into Laravel
  *
+ * @group laravel
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  */
 class LaravelIntegrationTest extends TestCase
