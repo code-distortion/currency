@@ -68,9 +68,11 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->updateLocale();
 
-        Currency::setDefaultCurCode(config('code-distortion.currency.default_currency_code'));
-        Currency::setDefaultImmutability(config('code-distortion.currency.immutable'));
-        Currency::setDefaultFormatSettings(config('code-distortion.currency.format_settings'));
+        if (config('code-distortion.currency')) {
+            Currency::setDefaultCurCode(config('code-distortion.currency.default_currency_code'));
+            Currency::setDefaultImmutability(config('code-distortion.currency.immutable'));
+            Currency::setDefaultFormatSettings(config('code-distortion.currency.format_settings'));
+        }
     }
 
     /**
