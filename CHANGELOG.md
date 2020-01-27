@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
+## [0.4.1] - 2020-01-27
+
+### Added
+- GitHub actions workflows file
+
+### Changed
+- Updated the code-of-conduct to https://www.contributor-covenant.org/version/2/0/code_of_conduct.html
+- Added Treeware details
+- Bumped dependencies
+- Updated non-Testbench tests so they could use the non-namespaced phpunit TestCase from old versions of phpunit (because old versions of Testbench require old versions of phpunit). This allowed testing back to Laravel 5.2.
+
+
+
 ## [0.4.0] - 2019-11-27
 
 ### Changed
