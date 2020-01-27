@@ -1,6 +1,12 @@
 # Currency
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/code-distortion/currency.svg?style=flat-square)](https://packagist.org/packages/code-distortion/currency) ![PHP from Packagist](https://img.shields.io/packagist/php-v/code-distortion/currency?style=flat-square) ![Laravel](https://img.shields.io/badge/laravel-5%20%26%206-blue?style=flat-square) [![contributor covenant](https://img.shields.io/badge/contributor%20covenant-v1.4%20adopted-ff69b4.svg?style=flat-square)](code-of-conduct.md)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/code-distortion/currency.svg?style=flat-square)](https://packagist.org/packages/code-distortion/currency)
+![PHP from Packagist](https://img.shields.io/packagist/php-v/code-distortion/currency?style=flat-square)
+![Laravel](https://img.shields.io/badge/laravel-5%20%26%206-blue?style=flat-square)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/code-distortion/currency/run-tests?label=tests&style=flat-square)](https://github.com/code-distortion/currency/actions)
+[![Buy us a tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://offset.earth/treeware?gift-trees)
+[![Contributor Covenant](https://img.shields.io/badge/contributor%20covenant-v2.0%20adopted-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
+
 
 ***code-distortion/currency*** is a PHP library for accurate currency maths with locale-aware formatting. It integrates with Laravel 5 & 6 but works stand-alone as well.
 
@@ -482,6 +488,16 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ### SemVer
 
 This library uses [SemVer 2.0.0](https://semver.org/) versioning. This means that changes to `X` indicate a breaking change: `0.0.X`, `0.X.y`, `X.y.z`. When this library changes to version 1.0.0, 2.0.0 and so forth it doesn't indicate that it's necessarily a notable release, it simply indicates that the changes were breaking.
+
+## Treeware
+
+You're free to use this package, but if it makes it to your production environment please plant or buy a tree for the world.
+
+It's now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a href="https://www.bbc.co.uk/news/science-environment-48870920">plant trees</a>. If you support this package and contribute to the Treeware forest you'll be creating employment for local families and restoring wildlife habitats.
+
+You can buy trees here [offset.earth/treeware](https://offset.earth/treeware?gift-trees)
+
+Read more about Treeware at [treeware.earth](http://treeware.earth)
 
 ## Contributing
 
