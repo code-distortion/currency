@@ -3,6 +3,7 @@
 namespace CodeDistortion\Currency\Tests\StandAlone\Unit;
 
 use CodeDistortion\Currency\Currency;
+use CodeDistortion\Currency\Exceptions\InvalidCurrencyException;
 use CodeDistortion\Currency\Tests\StandAlone\TestCase;
 use CodeDistortion\RealNum\Exceptions\InvalidValueException as RealNumInvalidValueException;
 use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
@@ -911,7 +912,7 @@ class CurrencyUnitTest extends TestCase
         // });
 
         // no currency given
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(InvalidCurrencyException::class, function () {
             $currency = Currency::new(); // phpstan false positive
         });
 
@@ -926,14 +927,14 @@ class CurrencyUnitTest extends TestCase
         });
 
         // currency mismatch
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(InvalidCurrencyException::class, function () {
             $cur2 = Currency::new(2.239482390, 'NZD');
             Currency::new($cur2, 'AUD'); // invalid starting value
         });
 
         // currency mismatch
         $this->assertThrows(
-            InvalidArgumentException::class,
+            InvalidCurrencyException::class,
             function () {
                 $cur1 = Currency::new(5, 'AUD');
                 $cur2 = Currency::new(2, 'NZD');
@@ -943,7 +944,7 @@ class CurrencyUnitTest extends TestCase
 
         // currency mismatch
         $this->assertThrows(
-            InvalidArgumentException::class,
+            InvalidCurrencyException::class,
             function () {
                 $cur1 = Currency::new(5, 'AUD');
                 $cur2 = Currency::new(2, 'NZD');
@@ -952,12 +953,12 @@ class CurrencyUnitTest extends TestCase
         );
 
         // unresolvable currency
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(InvalidCurrencyException::class, function () {
             Currency::new(null, 1);
         });
 
         // unresolvable currency
-        $this->assertThrows(InvalidArgumentException::class, function () {
+        $this->assertThrows(InvalidCurrencyException::class, function () {
             Currency::new(null, 'AUD')->curCode(1);
         });
     }
