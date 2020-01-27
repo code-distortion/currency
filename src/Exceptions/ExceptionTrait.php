@@ -3,14 +3,15 @@
 namespace CodeDistortion\Currency\Exceptions;
 
 /**
- * Provide tools for exceptions
+ * Provide tools for exceptions.
  */
 trait ExceptionTrait
 {
     /**
-     * Return the name of the class that called this one
+     * Return the name of the class that called this one.
      *
      * Thanks to hamstar https://stackoverflow.com/questions/3620923/how-to-get-the-name-of-the-calling-class-in-php .
+     *
      * @return string
      */
     protected static function getCallingClass(): string

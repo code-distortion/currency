@@ -15,7 +15,7 @@ if (class_exists(\PHPUnit\Framework\TestCase::class)) {
 use Jchook\AssertThrows\AssertThrows;
 
 /**
- * The test case that unit tests extend from
+ * The test case that unit tests extend from.
  */
 class TestCase extends BaseTestCase
 {

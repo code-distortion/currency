@@ -7,7 +7,7 @@ use CodeDistortion\Currency\Currency;
 use CodeDistortion\Currency\Tests\Laravel\TestCase;
 
 /**
- * Test the Currency's integration into Laravel
+ * Test the Currency's integration into Laravel.
  *
  * @group laravel
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -15,10 +15,8 @@ use CodeDistortion\Currency\Tests\Laravel\TestCase;
 class LaravelIntegrationTest extends TestCase
 {
     /**
-     * Test that the service-provider is registered in Laravel and acts correctly
+     * Test that the service-provider is registered in Laravel and acts correctly.
      *
-     * @todo get Laravel (orchestra-testbench) to pick up the service provider, and then perform the below test to
-     *       check that the change-locale event is picked up.
      * @test
      * @return void
      */

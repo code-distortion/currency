@@ -3,18 +3,19 @@
 namespace CodeDistortion\Currency\Laravel;
 
 use CodeDistortion\Currency\Currency;
+use CodeDistortion\RealNum\Exceptions\InvalidLocaleException;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Events\EventDispatcher;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 /**
- * Currency ServiceProvider for Laravel
+ * Currency ServiceProvider for Laravel.
  */
 class ServiceProvider extends BaseServiceProvider
 {
     /**
-     * Service-provider register method
+     * Service-provider register method.
      *
      * @return void
      */
@@ -24,9 +25,10 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Service-provider boot method
+     * Service-provider boot method.
      *
      * @return void
+     * @throws InvalidLocaleException Thrown when the locale cannot be resolved.
      */
     public function boot(): void
     {
@@ -38,7 +40,7 @@ class ServiceProvider extends BaseServiceProvider
 
 
     /**
-     * Initialise the config settings/file
+     * Initialise the config settings/file.
      *
      * @return void
      */
@@ -60,9 +62,10 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Set the Currency default values
+     * Set the Currency default values.
      *
      * @return void
+     * @throws InvalidLocaleException Thrown when the locale cannot be resolved.
      */
     protected function setDefaults(): void
     {
@@ -76,7 +79,7 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Listen for locale changes
+     * Listen for locale changes.
      *
      * @return void
      */
@@ -101,7 +104,7 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Ensure the given thing is an event dispatcher
+     * Ensure the given thing is an event dispatcher.
      *
      * @param mixed $instance The object to check.
      * @return boolean
@@ -114,9 +117,10 @@ class ServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Update the Currency locale
+     * Update the Currency locale.
      *
      * @return void
+     * @throws InvalidLocaleException Thrown when the locale cannot be resolved.
      */
     protected function updateLocale(): void
     {

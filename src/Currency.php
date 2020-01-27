@@ -14,22 +14,22 @@ use Throwable;
 /**
  * Represents currency values, performs calculations & comparisons on them, and renders them in different locales.
  *
- * @property ?callable $currencyResolver
- * @property string    $curCode
- * @property string    $symbol
- * @property int       $decPl
- * @property ?int      $customDecPl
- * @property boolean   $usingCustomDecPl
+ * @property callable|null $currencyResolver
+ * @property string        $curCode
+ * @property string        $symbol
+ * @property int           $decPl
+ * @property int|null      $customDecPl
+ * @property boolean       $usingCustomDecPl
  */
 class Currency extends Base
 {
     /**
-     * The original default curCode - used when resetting the class-level defaults
+     * The original default curCode - used when resetting the class-level defaults.
      */
     const ORIG_DEFAULT_CUR_CODE = null;
 
     /**
-     * The original default format-settings - used when resetting the class-level defaults
+     * The original default format-settings - used when resetting the class-level defaults.
      */
     const ORIG_FORMAT_SETTINGS = [
         'null' => null,
@@ -46,17 +46,19 @@ class Currency extends Base
 
 
     /**
-     * The default currency code to use (at the class-level)
+     * The default currency code to use (at the class-level).
      *
-     * Objects will pick this value up when instantiated (if not specified when instantiating)
+     * Objects will pick this value up when instantiated (if not specified when instantiating).
+     *
      * @var integer|string|null
      */
     protected static $defaultCurCode = null;
 
     /**
-     * The default maximum number of decimal places available to use (at the class-level)
+     * The default maximum number of decimal places available to use (at the class-level).
      *
      * Objects will pick this value up when instantiated.
+     *
      * @var integer
      */
     protected static $defaultMaxDecPl = 20;
@@ -65,6 +67,7 @@ class Currency extends Base
      * The default immutable-setting (at the class-level).
      *
      * Objects will pick this value up when instantiated.
+     *
      * @var boolean
      */
     protected static $defaultImmutable = true;
@@ -73,6 +76,7 @@ class Currency extends Base
      * The default settings to use when formatting the number (at the class-level).
      *
      * Objects will pick this value up when instantiated.
+     *
      * @var array
      */
     protected static $defaultFormatSettings = [
@@ -92,20 +96,22 @@ class Currency extends Base
 
 
     /**
-     * Callback used to resolve localeIdentifiers
+     * Callback used to resolve localeIdentifiers.
      *
      * It may for example understand database ids, and map them back to their 'en-AU' equivalent.
      * When this hasn't been set, the locales are assumed to be strings like 'en-AU' and treated as is.
-     * @var ?callable
+     *
+     * @var callable|null
      */
     protected static $localeResolver = null;
 
     /**
-     * Callback used to resolve currencyIdentifiers
+     * Callback used to resolve currencyIdentifiers.
      *
      * It may for example understand database ids, and map them back to their 'AUD' equivalent.
      * When this hasn't been set, the currency-codes are assumed to be strings like 'AUD' and treated as is.
-     * @var ?callable
+     *
+     * @var callable|null
      */
     protected static $currencyResolver = null;
 
@@ -114,16 +120,16 @@ class Currency extends Base
 
 
     /**
-     * The currency this object is currently using
+     * The currency this object is currently using.
      *
-     * @var ?string
+     * @var string|null
      */
     protected $curCode = null;
 
     /**
-     * The custom number of decimal places to use instead of the current currency's regular amount
+     * The custom number of decimal places to use instead of the current currency's regular amount.
      *
-     * @var ?integer
+     * @var integer|null
      */
     protected $customDecPl = null;
 
@@ -132,14 +138,14 @@ class Currency extends Base
 
 
     /**
-     * An internal cache of the number of decimal places per currency
+     * An internal cache of the number of decimal places per currency.
      *
      * @var array
      */
     protected static $currencyDecPl = [];
 
     /**
-     * An internal of the currency symbols, in each locale
+     * An internal of the currency symbols, in each locale.
      *
      * @var array
      */
@@ -147,13 +153,12 @@ class Currency extends Base
 
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param integer|float|string|self|null $value          The initial value to store.
      * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
-     *
      * @throws InvalidCurrencyException Thrown when a curCode wasn't passed and no default hasn't been specified.
      * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
      */
@@ -173,13 +178,12 @@ class Currency extends Base
     }
 
     /**
-     * Build a new Currency object
+     * Build a new Currency object.
      *
      * @param integer|float|string|self|null $value          The initial value to store.
      * @param integer|string|null            $curCode        The currency the $value is in.
      * @param boolean                        $throwException Should an exception be thrown if the $value is invalid?
      *                                                       (the value will be set to null upon error otherwise).
-     *
      * @return static
      * @throws InvalidCurrencyException Thrown when a curCode wasn't passed and no default hasn't been specified.
      * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
@@ -196,9 +200,10 @@ class Currency extends Base
 
 
     /**
-     * Set the default values back to their original value
+     * Set the default values back to their original value.
      *
-     * This is used during unit tests as these default values are static properties
+     * This is used during unit tests as these default values are static properties.
+     *
      * @return void
      */
     public static function resetDefaults(): void
@@ -211,7 +216,7 @@ class Currency extends Base
     }
 
     /**
-     * Retrieve the default curCode
+     * Retrieve the default curCode.
      *
      * @return integer|string|null
      */
@@ -221,7 +226,7 @@ class Currency extends Base
     }
 
     /**
-     * Update the default curCode
+     * Update the default curCode.
      *
      * @param integer|string|null $curCode The curCode to set.
      * @return void
@@ -233,10 +238,9 @@ class Currency extends Base
 
 
     /**
-     * Get various values stored in this object
+     * Get various values stored in this object.
      *
      * @param string $name The field to get.
-     *
      * @return mixed
      * @throws InvalidCurrencyException   Thrown when the currency cannot be resolved.
      * @throws UndefinedPropertyException Thrown when accessing an invalid field.
@@ -288,7 +292,7 @@ class Currency extends Base
 
 
     /**
-     * Update the currencyResolver
+     * Update the currencyResolver.
      *
      * @param callable|null $currencyResolver A closure used resolve currency-identifiers.
      * @return void
@@ -299,7 +303,7 @@ class Currency extends Base
     }
 
     /**
-     * Return the currencyResolver
+     * Return the currencyResolver.
      *
      * @return callable|null
      */
@@ -309,7 +313,7 @@ class Currency extends Base
     }
 
     /**
-     * Take the given $currencyIdentifier and return the relevant currency-code
+     * Take the given $currencyIdentifier and return the relevant currency-code.
      *
      * @param integer|string|null $currencyIdentifier The currency to resolve.
      * @return string
@@ -337,7 +341,7 @@ class Currency extends Base
 
 
     /**
-     * Set the curCode this object uses
+     * Set the curCode this object uses.
      *
      * @param integer|string $curCode The currency code to set.
      * @return static
@@ -349,7 +353,7 @@ class Currency extends Base
     }
 
     /**
-     * Let the caller set a custom number of decimal places to use
+     * Let the caller set a custom number of decimal places to use.
      *
      * @param integer $decPl The custom number of decimal places to use.
      * @return static
@@ -362,7 +366,7 @@ class Currency extends Base
     }
 
     /**
-     * Let the caller know if customDecPl is currently being used
+     * Let the caller know if customDecPl is currently being used.
      *
      * @return boolean
      */
@@ -372,7 +376,7 @@ class Currency extends Base
     }
 
     /**
-     * Set the decimal-places to match the current currency
+     * Set the decimal-places to match the current currency.
      *
      * @return static
      */
@@ -385,7 +389,7 @@ class Currency extends Base
     }
 
     /**
-     * Retrieve the number of decimal places for the given (or current) currency
+     * Retrieve the number of decimal places for the given (or current) currency.
      *
      * @param integer|string $curCode The currency to use.
      * @return integer|null
@@ -399,11 +403,10 @@ class Currency extends Base
     }
 
     /**
-     * Determine the currency symbol of the given currency in the given locale
+     * Determine the currency symbol of the given currency in the given locale.
      *
      * @param integer|string      $curCode The currency to get the symbol for.
      * @param integer|string|null $locale  The locale to use when getting the symbol.
-     *
      * @return string
      * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      * @throws InvalidLocaleException   Thrown when the locale cannot be resolved.
@@ -417,10 +420,9 @@ class Currency extends Base
     }
 
     /**
-     * Format the current value in a readable way
+     * Format the current value in a readable way.
      *
      * @param string|array|null $options The options to use when rendering the number.
-     *
      * @return string
      * @throws InvalidCurrencyException Thrown when the currency cannot be resolved.
      * @throws InvalidLocaleException   Thrown when the locale cannot be resolved.
@@ -546,7 +548,7 @@ class Currency extends Base
 
 
     /**
-     * Determine the number of decimal places in the given currency - STATIC
+     * Determine the number of decimal places in the given currency - STATIC.
      *
      * @param string $curCode The currency to get the decimal places for.
      * @return integer
@@ -569,7 +571,7 @@ class Currency extends Base
     }
 
     /**
-     * Determine the currency symbol of the given currency in the given locale - STATIC
+     * Determine the currency symbol of the given currency in the given locale - STATIC.
      *
      * @param string $curCode The currency to get the decimal places for.
      * @param string $locale  The locale to use when getting the symbol.
@@ -625,9 +627,9 @@ class Currency extends Base
 
 
     /**
-     * Returns an immutable version of this object (if enabled)
+     * Returns an immutable version of this object (if enabled).
      *
-     * @param boolean $force Will allways immute when true.
+     * @param boolean $force Will always immute when true.
      * @return static
      */
     protected function immute(bool $force = false): Base
@@ -636,7 +638,7 @@ class Currency extends Base
     }
 
     /**
-     * Retrieve the currencyCode
+     * Retrieve the currencyCode.
      *
      * @return string|null
      */
@@ -646,7 +648,7 @@ class Currency extends Base
     }
 
     /**
-     * Store the given value
+     * Store the given value.
      *
      * @param mixed $curCode The currency to use.
      * @return static
@@ -664,13 +666,12 @@ class Currency extends Base
     }
 
     /**
-     * Check if the passed value is compatible for operations on this object
+     * Check if the passed value is compatible for operations on this object.
      *
-     * (This may be overridden by child classes)
+     * (This may be overridden by child classes).
      *
      * @param mixed   $value          The value to check against the value stored in this object.
      * @param boolean $throwException Should an exception be raised if the given value isn't valid?.
-     *
      * @return boolean
      * @throws InvalidCurrencyException Thrown when the given value is invalid (and $throwException is true).
      * @throws InvalidValueException    Thrown when the given value is invalid (and $throwException is true).
@@ -703,7 +704,7 @@ class Currency extends Base
 
 
     /**
-     * Use the given currency, but use the current one if needed
+     * Use the given currency, but use the current one if needed.
      *
      * @param integer|string|null $currencyIdentifier The currency to force (otherwise the current one is used).
      * @return string

@@ -3,11 +3,11 @@
 namespace CodeDistortion\Currency\Tests\Laravel;
 
 use CodeDistortion\Currency\Laravel\ServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
 use Jchook\AssertThrows\AssertThrows;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
 /**
- * The test case that unit tests extend from
+ * The test case that unit tests extend from.
  */
 class TestCase extends BaseTestCase
 {

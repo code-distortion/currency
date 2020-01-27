@@ -13,7 +13,7 @@ use PHPUnit\Framework\Error\Warning;
 use stdClass;
 
 /**
- * Test the Currency library class
+ * Test the Currency library class.
  *
  * @group standalone
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -21,7 +21,7 @@ use stdClass;
 class CurrencyUnitTest extends TestCase
 {
     /**
-     * Some alternate format settings used below for testing
+     * Some alternate format settings used below for testing.
      *
      * @var array
      */
@@ -40,7 +40,7 @@ class CurrencyUnitTest extends TestCase
 
 
     /**
-     * Some set-up, run before each test
+     * Some set-up, run before each test.
      *
      * @return void
      */
@@ -53,7 +53,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Provides the different immutable situations to test for the test_currency_immutability_setters test below
+     * Provides the different immutable situations to test for the test_currency_immutability_setters test below.
      *
      * @return array
      */
@@ -97,7 +97,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Provides the different render options for testing in the test_currency_locale_rendering test below
+     * Provides the different render options for testing in the test_currency_locale_rendering test below.
      *
      * @return array
      */
@@ -379,7 +379,7 @@ class CurrencyUnitTest extends TestCase
 
 
     /**
-     * Test the ways the default locale, immutability and default-format settings are altered
+     * Test the ways the default locale, immutability and default-format settings are altered.
      *
      * @test
      * @return void
@@ -424,7 +424,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the various ways of changing values in Currency when immutable / not immutable
+     * Test the various ways of changing values in Currency when immutable / not immutable.
      *
      * @test
      * @dataProvider immutableDataProviderSetters
@@ -457,7 +457,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the ways the Currency class can be instantiated
+     * Test the ways the Currency class can be instantiated.
      *
      * @test
      * @return void
@@ -499,7 +499,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test setting various Currency values
+     * Test setting various Currency values.
      *
      * @test
      * @return void
@@ -573,7 +573,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the various methods that perform a Currency calculation
+     * Test the various methods that perform a Currency calculation.
      *
      * @test
      * @return void
@@ -586,7 +586,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the different ways to the Currency value can be rendered
+     * Test the different ways to the Currency value can be rendered.
      *
      * @test
      * @dataProvider localeRenderingDataProvider
@@ -612,7 +612,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the __toString magic method
+     * Test the __toString magic method.
      *
      * @test
      * @return void
@@ -636,7 +636,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test how the Currency class handles different decimal places, and rounding
+     * Test how the Currency class handles different decimal places, and rounding.
      *
      * @test
      * @return void
@@ -727,7 +727,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test how the Currency class' default locale is set and used
+     * Test how the Currency class' default locale is set and used.
      *
      * @test
      * @return void
@@ -768,7 +768,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test how the Currency class renders symbols in different currencies / locales
+     * Test how the Currency class renders symbols in different currencies / locales.
      *
      * @test
      * @return void
@@ -806,7 +806,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test how to get the currency code from the Currency object
+     * Test how to get the currency code from the Currency object.
      *
      * @test
      * @return void
@@ -825,7 +825,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the locale resolver, as a closure and as a class
+     * Test the locale resolver, as a closure and as a class.
      *
      * @test
      * @return void
@@ -844,7 +844,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the currency resolver
+     * Test the currency resolver.
      *
      * @test
      * @return void
@@ -864,7 +864,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the different values that Currency can use
+     * Test the different values that Currency can use.
      *
      * @test
      * @return void
@@ -899,7 +899,7 @@ class CurrencyUnitTest extends TestCase
     }
 
     /**
-     * Test the ways Currency generates exceptions
+     * Test the ways Currency generates exceptions.
      *
      * @test
      * @return void
@@ -948,7 +948,7 @@ class CurrencyUnitTest extends TestCase
                 function () {
                     $cur1 = Currency::new(5, 'AUD');
                     $cur2 = Currency::new(2, 'NZD');
-                   $cur1->add($cur2);
+                    $cur1->add($cur2);
                 }
             );
 

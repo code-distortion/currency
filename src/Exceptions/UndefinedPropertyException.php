@@ -2,18 +2,15 @@
 
 namespace CodeDistortion\RealNum\Exceptions;
 
-use CodeDistortion\RealNum\Exceptions\ExceptionTrait;
-use Exception;
-
 /**
- * Exception for when undefined properties are accessed
+ * Exception for when undefined properties are accessed.
  */
 class UndefinedPropertyException extends CurrencyException
 {
     use ExceptionTrait;
 
     /**
-     * Return a new instance when a undefined property was accessed
+     * Return a new instance when a undefined property was accessed.
      *
      * @param string $name The name of the unexpected property being accessed.
      * @return static
