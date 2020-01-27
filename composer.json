@@ -5,6 +5,7 @@
         "code distortion",
         "currency",
         "accurate",
+        "arbitrary",
         "precision",
         "math",
         "bcmath",
@@ -31,8 +32,8 @@
     "require": {
         "php": "^7.1",
         "ext-intl": "*",
-        "code-distortion/options": "^0.5",
-        "code-distortion/realnum": "^0.6.2"
+        "code-distortion/options": "^0.5.1",
+        "code-distortion/realnum": "^0.6.3"
     },
     "require-dev": {
         "jchook/phpunit-assert-throws": "^1.0",
