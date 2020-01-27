@@ -7,18 +7,7 @@
 [![Buy us a tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://offset.earth/treeware?gift-trees)
 [![Contributor Covenant](https://img.shields.io/badge/contributor%20covenant-v2.0%20adopted-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
-
 ***code-distortion/currency*** is a PHP library for accurate currency maths with locale-aware formatting. It integrates with Laravel 5 & 6 but works stand-alone as well.
-
-It uses PHP's [BCMath](https://www.php.net/manual/en/book.bc.php) extension to avoid inaccurate floating point calculations:
-
-``` php
-// an example of floating-point inaccuracy
-var_dump(0.1 + 0.2 == 0.3); // bool(false)
-// for more details see The Floating-Point Guide - https://floating-point-gui.de/
-```
-
-Amounts are formatted in different locales using PHP's [NumberFormatter](https://www.php.net/manual/en/class.numberformatter.php). Some examples include:
 
 | Currency | en-US | de-DE | sv-SE | hi-IN | ar-EG |
 | :----: | :----: | :----: | :----: | :----: | :----: |
@@ -29,13 +18,22 @@ Amounts are formatted in different locales using PHP's [NumberFormatter](https:/
 | INR | ₹1,234,567.89 | 1.234.567,89 ₹ | 1 234 567,89 INR | ₹12,34,567.89 | ١٬٢٣٤٬٥٦٧٫٨٩ ₹ |
 | EGP | EGP 1,234,567.89 | 1.234.567,89 EGP | 1 234 567,89 EG£ | EGP 12,34,567.89 | ١٬٢٣٤٬٥٦٧٫٨٩ ج.م.‏ |
 
+Here is an example of why you might want arbitrary precision calculations:
+
+``` php
+// an example of floating-point inaccuracy
+var_dump(0.1 + 0.2 == 0.3); // bool(false)
+// for more details see:
+// The Floating-Point Guide - https://floating-point-gui.de/
+```
+
 If you would like to work with regular *floating-point* or *percentage* values, please consider the [code-distortion/realnum](https://github.com/code-distortion/realnum) package.
 
 ## Installation
 
 Install the package via composer:
 
-```bash
+``` bash
 composer require code-distortion/currency
 ```
 
@@ -48,11 +46,6 @@ use CodeDistortion\Currency\Currency;
 $cur1 = new Currency(5555.55, 'USD');  // normal instantiation
 $cur1 = Currency::new(5555.55, 'USD'); // static instantiation which is more readable when chaining
 
-// you may specify a default currency-code
-Currency::setDefaultCurCode('USD');
-$cur1 = new Currency(5555.55);  // normal instantiation
-$cur1 = Currency::new(5555.55); // static instantiation which is more readable when chaining
-
 $cur2 = $cur1->add(4444.44); // (it's immutable so a new object is created)
 $cur2->between(8000, 10000); // true
 print $cur2->format();       // "$9,999.99"
@@ -60,11 +53,11 @@ print $cur2->format();       // "$9,999.99"
 
 ### Default currency-code
 
-The default currency-code isn't set to begin with but you can choose one. If you use Laravel this may be set in the /config/currency.php config file. See the [Laravel](#laravel) section below for more details. Otherwise you may:
+The default currency-code isn't set to begin with but you can choose one. If you use Laravel this may be set in the /config/code-distortion.currency.php config file. See the [Laravel](#laravel) section below for more details. Otherwise you may:
 
 ``` php
 Currency::new(5, 'USD'); // ok - $5 USD
-Currency::new(5);        // exception "Currency-code was not specified. Please pass one or specify a default"
+Currency::new(5);        // InvalidCurrencyException: "Currency-code was not specified. Please pass one or specify a default"
 
 var_dump(Currency::getDefaultCurCode()); // null
 Currency::setDefaultCurCode('JPY');
@@ -119,14 +112,14 @@ $cur = $cur->formatSettings('!thousands'); // alters the default options used wh
 To retrieve the value contained in a Currency object you may read the `val` and `cast` properties. The `val` property maintains precision and in contrast, `cast` will loose some precision so use them depending on your needs:
 
 ``` php
-$cur = Currency::new('0.12345678901234567890');
+$cur = Currency::new()->customDecPl(20)->val('0.12345678901234567890');
 print $cur->val;  // "0.12345678901234567890" (returned as a string, or null)
 print $cur->cast; // 0.12345678901235 (cast to either an integer, float or null - this is less accurate)
 ```
 
 These properties associated to the currency may be read:
 
-```php
+``` php
 $cur = Currency::new(1);
 print $cur->curCode; // USD (the current currency code)
 print $cur->symbol;  // $ (the currency symbol in the current locale)
@@ -145,7 +138,7 @@ print $cur->immutable;         // true
 
 And you can also obtain each currency's symbol:
 
-```php
+``` php
 print Currency::symbol('USD');          // "$" (will pick-up the current default locale 'en')
 print Currency::symbol('USD', 'en-US'); // "$" (for a specific locale)
 print Currency::symbol('USD', 'en-IN'); // "US$" (same currency, but a different symbol)
@@ -158,7 +151,7 @@ print Currency::symbol('JPY', 'ja-JP'); // "￥"
 
 ### Calculations
 
-The calculations you may perform are:
+The calculations available are:
 
 ``` php
 $cur = Currency::new(5);
@@ -174,18 +167,18 @@ $cur = $cur->floor();  // use the floor of the current value
 $cur = $cur->ceil();   // use the ceiling of the current value
 ```
 
-You may pass multiple values to `add()`, `sub()`, `div()` and `mul()`:
+The `add()`, `sub()`, `div()` and `mul()` methods accept multiple values:
 
-```php
+``` php
 Currency::new(5)->add(4, 3, 2, 1); // $15.00
 Currency::new(5)->sub(4, 3, 2, 1); // -$5.00
 Currency::new(5)->customDecPl(15)->div(4, 3, 2, 1); // $0.208333333333333
 Currency::new(5)->mul(4, 3, 2, 1); // $120.00
 ```
 
-You may pass: *integer*, *float*, *numeric string* and *null* values, as well as other *Currency* objects.
+*integer*, *float*, *numeric string* and *null* values, as well as other *Currency* objects may be passed:
 
-```php
+``` php
 $cur1 = Currency::new(5);
 $cur1 = $cur1->add(2);      // pass an integer
 $cur1 = $cur1->add(2.0);    // pass a float
@@ -235,19 +228,19 @@ print $cur->format(); // "$1,234,567.89"
 
 You may alter the way `format()` renders the output by passing options. The options you can alter are:
 
-`null=x`, `noZeros`, `decPl=x`, `symbol`, `thousands`, `showPlus`, `accountingNeg`, `locale=x` and `breaking`.
+`null=x`, `decPl=x`, `trailZeros`, `symbol`, `thousands`, `showPlus`, `accountingNeg`, `locale=x` and `breaking`.
 
-Options without a value can be negated by adding `!` before it.
+Boolean options (those without an equals sign) can be negated by adding `!` before it.
 
-***Note:*** `format()` options are processed using the [code-distortion/options](https://packagist.org/packages/code-distortion/options) package so they may be passed as expressive strings or associative arrays.
+***Note:*** `format()` options are processed using the [code-distortion/options](https://github.com/code-distortion/options) package so they may be passed as expressive strings or associative arrays.
 
 ``` php
 print Currency::new(null)->format('null=null');   // null (actual null - default)
 print Currency::new(null)->format('null="null"'); // "null" (returned as a string)
 print Currency::new(null)->format('null=0');      // "$0.00"
 
-print Currency::new(1)->format('noZeros');  // "$1" (hides the decimal places when zero)
-print Currency::new(1)->format('!noZeros'); // "$1.00" (includes the decimal places - default)
+print Currency::new(1)->format('!trailZeros');  // "$1" (hides the decimal places when zero)
+print Currency::new(1)->format('trailZeros'); // "$1.00" (includes the decimal places - default)
 
 // the amount can be rounded and shown to a specific number of decimal places (this is different to the internal customDecPl setting)
 print Currency::new()->customDecPl(20)->val(1.9876)->format('decPl=null'); // "$1.9876" (no rounding - default)
@@ -289,13 +282,13 @@ print Currency::new()->symbol; // "$"
 
 Multiple settings can be used together:
 
-```php
+``` php
 print Currency::new(1234567.89)->format('!thousands showPlus locale=de-DE'); // "+1234567,89 $"
 ```
 
 Casting a Currency to a string is equivalent to calling `format()` with no arguments:
 
-```php
+``` php
 print (string) Currency::new(1234567.89); // "$1,234,567.89"
 ```
 
@@ -303,11 +296,11 @@ print (string) Currency::new(1234567.89); // "$1,234,567.89"
 
 ### Default format settings
 
-Currency uses these default settings when `format()` is called: `"null=null !noZeros symbol thousands !showPlus !accountingNeg locale=en !breaking"`
+Currency uses these default settings when `format()` is called: `"null=null decPl=null trailZeros symbol thousands !showPlus !accountingNeg locale=en !breaking"`
 
 ***Note:*** When using Laravel you may set this in the package config file. See the [Laravel](#laravel) section below.
 
-***Note:*** `format()` options are processed using the [code-distortion/options](https://packagist.org/packages/code-distortion/options) package so they may be passed as expressive strings or associative arrays. The default options are stored internally as arrays.
+***Note:*** `format()` options are processed using the [code-distortion/options](https://github.com/code-distortion/options) package so they may be passed as expressive strings or associative arrays.
 
 These can be adjusted per-object:
 
@@ -316,12 +309,12 @@ $cur = Currency::new(1234567.89)->formatSettings('!thousands showPlus');
 print $cur->format(); // "+$1234567.89" (no thousands separator, show-plus)
 ```
 
-The default format-settings can be adjusted. All ***new*** Currency objects will start with this setting:
+The default format-settings can be adjusted. All ***new*** Currency objects will then start with this setting:
 
 ``` php
-var_dump(Currency::getDefaultFormatSettings()); // ['null' => null, 'noZeros' => false … ] (default)
-Currency::setDefaultFormatSettings('null="NULL" noZeros');
-var_dump(Currency::getDefaultFormatSettings()); // ['null' => 'NULL', 'noZeros' => true … ]
+var_dump(Currency::getDefaultFormatSettings()); // ['null' => null, 'decPl' => null … ] (default)
+Currency::setDefaultFormatSettings('null="NULL" decPl=5');
+var_dump(Currency::getDefaultFormatSettings()); // ['null' => 'NULL', 'decPl' => 5 … ]
 ```
 
 ### Locale
@@ -341,7 +334,7 @@ print $cur2->locale;            // "fr-FR"
 print $cur2->format();          // "1 234 567,89 $US"
 ```
 
-The default locale may be changed. All ***new*** Currency objects will start with this setting:
+The default locale may be changed. All ***new*** Currency objects will then start with this setting:
 
 ``` php
 Currency::setDefaultLocale('fr-FR');
@@ -372,14 +365,16 @@ print $cur->usingCustomDecPl; // true
 
 You can revert back to the normal number of decimal places using `currencyDecPl()`:
 
-```php
+``` php
+$cur = Currency::new()->customDecPl(30);
+print $cur->decPl; // 30
 $cur = $cur->useCurrencyDecPl(); // goes back to USD's 2 decimal places - the amount inside will be rounded automatically
 print $cur->decPl; // 2
 ```
 
 To find out how many decimal places a currency has:
 
-```php
+``` php
 print Currency::currencyDecPl('USD'); // 2
 print Currency::currencyDecPl('JPY'); // 0
 ```
@@ -388,7 +383,7 @@ print Currency::currencyDecPl('JPY'); // 0
 
 ***Note:*** When using Laravel you may set this in the package config file. See the [Laravel](#laravel) section below.
 
-Currency is immutable by default which means that once an object is created it won't change. Anything that changes the value will return a new Currency instead. You can then pass a Currency object to other parts of your code and be sure that it won't be changed unexpectedly:
+Currency is immutable by default which means that once an object is created it won't change. Anything that changes its contents will return a new Currency instead. This way you can pass a Currency object to other parts of your code and be sure that it won't be changed unexpectedly:
 
 ``` php
 $cur1 = Currency::new(1);
@@ -406,7 +401,7 @@ print $cur1->format(); // "$3.00"
 print $cur2->format(); // "$3.00"
 ```
 
-Immutability may be turned off by default. All ***new*** Currency objects will start with this setting:
+Immutability may be turned off by default. All ***new*** Currency objects will then start with this setting:
 
 ``` php
 Currency::setDefaultImmutability(false);
@@ -415,7 +410,7 @@ var_dump(Currency::getDefaultImmutability()); // "bool(false)"
 
 You can explicitly make a clone of a Currency object:
 
-```php
+``` php
 $cur1 = Currency::new();
 $cur2 = $cur1->copy(); // this will return a clone regardless of the immutability setting
 ```
@@ -440,7 +435,7 @@ print htmlentities($cur->format('breaking'));      // "1 234 567,89 US$" (regula
 
 ### Chaining
 
-The *setting* and *calculation* methods above may be chained together:
+The *setting* and *calculation* methods above may be chained together. eg.
 
 ``` php
 print Currency::new(1)
@@ -469,7 +464,7 @@ The service-provider will register the starting locale with Currency and update 
 
 #### Config
 
-You may specify default immutability and format-settings by publishing the **config/currency.php** config file and updating it:
+You may specify default immutability and format-settings by publishing the **config/code-distortion.currency.php** config file and updating it:
 
 ``` bash
 php artisan vendor:publish --provider="CodeDistortion\Currency\Laravel\ServiceProvider" --tag="config"
