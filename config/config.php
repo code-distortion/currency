@@ -37,7 +37,7 @@ return [
     | can adjust these by adding values to the string below. You may choose
     | from the possible values below.
     |
-    | default: 'symbol thousards !showPlus !accountingNeg !nullString !nullZero !noZeros !breaking'
+    | default: 'null=null decPl=null trailZeros symbol thousands !showPlus !accountingNeg !breaking'
     |
     */
 
