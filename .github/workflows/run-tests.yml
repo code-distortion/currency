@@ -86,8 +86,6 @@ jobs:
                     # the output for some numbers contains unexpected characters (they look correct but are different to every other os/php combination)
                     -   php: 7.1
                         os: windows-latest
-                    -   php: 7.4
-                        os: windows-latest
 
         steps:
             -   name: Checkout code

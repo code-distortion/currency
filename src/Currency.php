@@ -535,6 +535,13 @@ class Currency extends Base
                 $callback
             );
 
+            // compensate for the extra nbsp space being added to the currency character
+            // this happens when en-IN is used - in some environments
+            if ($locale == 'en-IN') {
+                $symbol = static::renderSymbol($curCode, $locale);
+                $return = str_replace([$symbol.' ', $symbol."\xc2\xa0"], $symbol, $return);
+            }
+
             return $return;
         }
 
@@ -599,7 +606,7 @@ class Currency extends Base
             $numberA = str_replace(["\xc2\xa0", "\xe2\x80\xaf", "\xe2\x80\x8e", "\xe2\x80\x8f"], ' ', $numberA);
             $numberB = str_replace(["\xc2\xa0", "\xe2\x80\xaf", "\xe2\x80\x8e", "\xe2\x80\x8f"], ' ', $numberB);
 
-            // which characters are different beween these two strings
+            // which characters are different between these two strings
             $differentCharPos = [];
             for ($count = 0; $count < mb_strlen($numberA); $count++) {
                 if (mb_substr($numberA, $count, 1) != mb_substr($numberB, $count, 1)) {
