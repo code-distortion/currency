@@ -8,9 +8,11 @@ use CodeDistortion\Currency\Tests\StandAlone\TestCase;
 use CodeDistortion\RealNum\Exceptions\InvalidValueException as RealNumInvalidValueException;
 use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use CodeDistortion\RealNum\RealNum;
+use DivisionByZeroError;
 use PHPUnit\Framework\Constraint\Exception as ConstraintException;
 use PHPUnit\Framework\Error\Warning;
 use stdClass;
+use Throwable;
 
 /**
  * Test the Currency library class.
@@ -932,9 +934,21 @@ class CurrencyUnitTest extends TestCase
             });
 
             // division by 0
-            $this->assertThrows(Warning::class, function () {
-                Currency::new(1, 'AUD')->div(0);
-            });
+            $exceptionClass = version_compare(phpversion(), '8.0', '>=')
+                ? DivisionByZeroError::class
+                : Warning::class;
+            try {
+                $this->assertThrows($exceptionClass, function () {
+                    Currency::new(1, 'AUD')->div(0);
+                });
+            } catch (Throwable $e) {
+                // for some reason, the DivisionByZeroError exception
+                // is still thrown in PHP 8.0 prefer-lowest tests
+                // double check it again here
+                if ($exceptionClass != get_class($e)) {
+                    throw $e;
+                }
+            }
 
             // currency mismatch
             $this->assertThrows(InvalidCurrencyException::class, function () {
