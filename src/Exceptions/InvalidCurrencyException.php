@@ -15,7 +15,7 @@ class InvalidCurrencyException extends CurrencyException
      */
     public static function unresolveableCurrency($currencyIdentifier): self
     {
-        return new static('Currency "'.$currencyIdentifier.'" could not be resolved');
+        return new static('Currency "' . $currencyIdentifier . '" could not be resolved');
     }
 
     /**
@@ -27,7 +27,7 @@ class InvalidCurrencyException extends CurrencyException
      */
     public static function incompatibleCurrencies($currency1, $currency2): self
     {
-        return new static('Currency code '.$currency1.' is not compatible with '.$currency2);
+        return new static('Currency code ' . $currency1 . ' is not compatible with ' . $currency2);
     }
 
     /**

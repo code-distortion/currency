@@ -23,15 +23,11 @@ use Throwable;
  */
 class Currency extends Base
 {
-    /**
-     * The original default curCode - used when resetting the class-level defaults.
-     */
-    const ORIG_DEFAULT_CUR_CODE = null;
+    /** @var integer|string|null The original default curCode - used when resetting the class-level defaults. */
+    public const ORIG_DEFAULT_CUR_CODE = null;
 
-    /**
-     * The original default format-settings - used when resetting the class-level defaults.
-     */
-    const ORIG_FORMAT_SETTINGS = [
+    /** @var array The original default format-settings - used when resetting the class-level defaults. */
+    public const ORIG_FORMAT_SETTINGS = [
         'null' => null,
         'decPl' => null,
         'trailZeros' => true,
@@ -479,8 +475,10 @@ class Currency extends Base
 
             // remove trailing zeros if desired and there is no decimal value
             if (!$resolvedOptions['trailZeros']) {
-                if (static::roundCalculation($value, 0, $maxDecPl)         // check if the whole number
-                === static::roundCalculation($value, $decPl, $maxDecPl)) { // equals the num to the correct decPl
+                if (
+                    static::roundCalculation($value, 0, $maxDecPl)         // check if the whole number
+                    === static::roundCalculation($value, $decPl, $maxDecPl)
+                ) { // equals the num to the correct decPl
 
                     // @todo this isn't respected when showing currency values in currencies that don't belong to
                     // the locale (or something like this) and may need to be compensated for (ie. php code to
@@ -515,7 +513,7 @@ class Currency extends Base
                     // (including NON-BREAKING SPACE and NARROW NO-BREAK SPACE)
                     $number = trim(
                         (string) preg_replace(
-                            "/( |\xc2\xa0|\xe2\x80\xaf)*".preg_quote($symbol, '/')."( |\xc2\xa0|\xe2\x80\xaf)*/",
+                            "/( |\xc2\xa0|\xe2\x80\xaf)*" . preg_quote($symbol, '/') . "( |\xc2\xa0|\xe2\x80\xaf)*/",
                             '',
                             $number
                         )
@@ -539,7 +537,7 @@ class Currency extends Base
             // this happens when en-IN is used - in some environments
             if ($locale == 'en-IN') {
                 $symbol = static::renderSymbol($curCode, $locale);
-                $return = str_replace([$symbol.' ', $symbol."\xc2\xa0"], $symbol, $return);
+                $return = str_replace([$symbol . ' ', $symbol . "\xc2\xa0"], $symbol, $return);
             }
 
             return $return;

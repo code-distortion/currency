@@ -24,10 +24,17 @@ trait ExceptionTrait
 
         // +1 to i because we have to account for calling this function
         for ($i = 1; $i < count($trace); $i++) {
-            if ((isset($trace[$i]))               // is it set?
-            && ($class != $trace[$i]['class'])) { // is it a different class
-                return $trace[$i]['class'];
+
+            // is it set?
+            if (!isset($trace[$i])) {
+                continue;
             }
+            // is it a different class
+            if ($class == $trace[$i]['class']) {
+                continue;
+            }
+
+            return $trace[$i]['class'];
         }
         return '';
     }

@@ -17,6 +17,6 @@ class UndefinedPropertyException extends CurrencyException
      */
     public static function new(string $name): self
     {
-        return new static('Undefined property: '.static::getCallingClass().'::$'.$name);
+        return new static('Undefined property: ' . static::getCallingClass() . '::$' . $name);
     }
 }
