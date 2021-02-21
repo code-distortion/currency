@@ -4,7 +4,7 @@
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/code-distortion/currency?style=flat-square)
 ![Laravel](https://img.shields.io/badge/laravel-5%2C%206%20%26%207-blue?style=flat-square)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/code-distortion/currency/run-tests?label=tests&style=flat-square)](https://github.com/code-distortion/currency/actions)
-[![Buy us a tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://offset.earth/treeware?gift-trees)
+[![Buy The World a Tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://plant.treeware.earth/code-distortion/currency)
 [![Contributor Covenant](https://img.shields.io/badge/contributor%20covenant-v2.0%20adopted-ff69b4.svg?style=flat-square)](CODE_OF_CONDUCT.md)
 
 ***code-distortion/currency*** is a PHP library for accurate currency maths with locale-aware formatting. It integrates with Laravel 5, 6 & 7 but works stand-alone as well.
@@ -29,6 +29,8 @@ var_dump(0.1 + 0.2 == 0.3); // bool(false)
 
 If you would like to work with regular *floating-point* or *percentage* values, please consider the [code-distortion/realnum](https://github.com/code-distortion/realnum) package.
 
+
+
 ## Installation
 
 Install the package via composer:
@@ -36,6 +38,8 @@ Install the package via composer:
 ``` bash
 composer require code-distortion/currency
 ```
+
+
 
 ## Usage
 
@@ -50,6 +54,8 @@ $cur2 = $cur1->add(4444.44); // (it's immutable so a new object is created)
 $cur2->between(8000, 10000); // true
 print $cur2->format();       // "$9,999.99"
 ```
+
+
 
 ### Default currency-code
 
@@ -68,6 +74,8 @@ Currency::new(5);        // ok - $5 JPY
 ```
 
 ***Note:*** All examples below use a default currency-code of USD.
+
+
 
 ### Setting values
 
@@ -106,6 +114,8 @@ $cur = $cur->useCurrencyDecPl();           // uses the current currency's decima
 $cur = $cur->immutable(false);             // sets whether this object is immutable or not (see the 'immutability' section below)
 $cur = $cur->formatSettings('!thousands'); // alters the default options used when format() is called (see the 'formatting output' section below)
 ```
+
+
 
 ### Retrieving values
 
@@ -149,6 +159,8 @@ print Currency::symbol('JPY', 'ja-JP'); // "￥"
 
 ***Note:*** See the [formatting output](#formatting-output) section below for more details about how to render the value as a readable string.
 
+
+
 ### Calculations
 
 The calculations available are:
@@ -188,6 +200,8 @@ $cur2 = Currency::new(2);
 $cur1 = $cur1->add($cur2);  // pass another Currency object
 ```
 
+
+
 ### Comparisons
 
 You can compare amounts to others with bound checking:
@@ -216,6 +230,8 @@ You can check if a Currency's value is between given bounds:
 Currency::new(5)->between(2, 8);        // check if 5 is between x and y (inclusively)
 Currency::new(5)->between(2, 8, false); // check if 5 is between x and y (NOT inclusively)
 ```
+
+
 
 ### Formatting output
 
@@ -294,6 +310,8 @@ print (string) Currency::new(1234567.89); // "$1,234,567.89"
 
 ***NOTE***: Currency uses PHP's NumberFormatter to render the readable output, which currently has a limitation of being able to only show about 17 digits (including before the decimal place). So `format()`'s output will act a bit strangely if there are too many digits. The number stored inside will maintain it's full accuracy however. You may access the full number by reading the `val` property (see the [retrieving values](#retrieving-values) section above).
 
+
+
 ### Default format settings
 
 Currency uses these default settings when `format()` is called: `"null=null decPl=null trailZeros symbol thousands !showPlus !accountingNeg locale=en !breaking"`
@@ -316,6 +334,8 @@ var_dump(Currency::getDefaultFormatSettings()); // ['null' => null, 'decPl' => n
 Currency::setDefaultFormatSettings('null="NULL" decPl=5');
 var_dump(Currency::getDefaultFormatSettings()); // ['null' => 'NULL', 'decPl' => 5 … ]
 ```
+
+
 
 ### Locale
 
@@ -340,6 +360,8 @@ The default locale may be changed. All ***new*** Currency objects will then star
 Currency::setDefaultLocale('fr-FR');
 print Currency::getDefaultLocale(); // "fr-FR"
 ```
+
+
 
 ### Precision (custom decimal places)
 
@@ -379,6 +401,8 @@ print Currency::currencyDecPl('USD'); // 2
 print Currency::currencyDecPl('JPY'); // 0
 ```
 
+
+
 ### Immutability
 
 ***Note:*** When using Laravel you may set this in the package config file. See the [Laravel](#laravel) section below.
@@ -415,6 +439,8 @@ $cur1 = Currency::new();
 $cur2 = $cur1->copy(); // this will return a clone regardless of the immutability setting
 ```
 
+
+
 ### Non-breaking whitespace
 
 Some locales use spaces when rendering numbers (eg. Swedish uses spaces for the thousands separator). `format()` can return strings containing either non-breaking whitespace characters,  or regular space characters.
@@ -433,6 +459,8 @@ print htmlentities($cur->format('breaking'));      // "1 234 567,89 US$" (regula
 
 ***Tip:*** The non-breaking whitespace setting can be changed per-object and by default. See the [formatting output](#formatting-output) and [default format settings](#default-format-settings) sections above.
 
+
+
 ### Chaining
 
 The *setting* and *calculation* methods above may be chained together. eg.
@@ -444,9 +472,13 @@ print Currency::new(1)
 ->format(); // "$12.50"
 ```
 
+
+
 ### Laravel
 
 The Currency package is framework agnostic and works well on it's own, but it also integrates with Laravel 5, 6 & 7.
+
+
 
 #### Service-provider
 
@@ -462,6 +494,8 @@ Currency integrates with Laravel 5.5+ automatically thanks to Laravel's package 
 
 The service-provider will register the starting locale with Currency and update it if it changes, so you don't have to.
 
+
+
 #### Config
 
 You may specify default immutability and format-settings by publishing the **config/code-distortion.currency.php** config file and updating it:
@@ -470,50 +504,58 @@ You may specify default immutability and format-settings by publishing the **con
 php artisan vendor:publish --provider="CodeDistortion\Currency\Laravel\ServiceProvider" --tag="config"
 ```
 
+
+
 ## Testing
 
 ``` bash
 composer test
 ```
 
+
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+
 
 ### SemVer
 
 This library uses [SemVer 2.0.0](https://semver.org/) versioning. This means that changes to `X` indicate a breaking change: `0.0.X`, `0.X.y`, `X.y.z`. When this library changes to version 1.0.0, 2.0.0 and so forth it doesn't indicate that it's necessarily a notable release, it simply indicates that the changes were breaking.
 
+
+
 ## Treeware
 
-You're free to use this package, but if it makes it to your production environment please plant or buy a tree for the world.
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/code-distortion/currency) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
-It's now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a href="https://www.bbc.co.uk/news/science-environment-48870920">plant trees</a>. If you support this package and contribute to the Treeware forest you'll be creating employment for local families and restoring wildlife habitats.
 
-You can buy trees here [offset.earth/treeware](https://offset.earth/treeware?gift-trees)
-
-Read more about Treeware at [treeware.earth](http://treeware.earth)
 
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-### Code of conduct
+
+
+### Code of Conduct
 
 Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+
+
 
 ### Security
 
 If you discover any security related issues, please email tim@code-distortion.net instead of using the issue tracker.
 
+
+
 ## Credits
 
 - [Tim Chandler](https://github.com/code-distortion)
 
+
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## PHP Package Boilerplate
-
-This package was generated using the [PHP Package Boilerplate](https://laravelpackageboilerplate.com).
