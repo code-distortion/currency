@@ -231,6 +231,12 @@ Currency::new(5)->between(2, 8);        // check if 5 is between x and y (inclus
 Currency::new(5)->between(2, 8, false); // check if 5 is between x and y (NOT inclusively)
 ```
 
+And you can check if the value is null:
+
+``` php
+Currency::new(5)->isNull();
+```
+
 
 
 ### Formatting output
