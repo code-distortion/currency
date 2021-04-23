@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
+## [0.5.0] - 2021-04-23
+
+### Changed (breaking)
+- Tweaked the way nulls are handled in calculations. Now:
+    - Adding or subtracting *null* with *null* will give *null*,
+    - Adding or subtracting a value (eg. 5) with *null* will give the value (5),
+    - Multiplying or dividing *null* with *null* will give *null*,
+    - Multiplying or dividing a value (eg. 5) with *null* will give *null*,
+
+### Added
+- New `->isNull()` method
+
+
+
 ## [0.4.3] - 2021-02-21
 
 ### Added
