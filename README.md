@@ -99,7 +99,7 @@ $cur6 = Currency::new();       // (will default to null)
 ***TIP:*** To maintain precision when passing values, pass them as strings instead of floating-point numbers:
 
 ``` php
-$cur = Currency::new()->customDecPl(20)->val(0.12345678901234567890);   // "0.12345678901235" (precision lost because the number passed is really a float)
+$cur = Currency::new()->customDecPl(20)->val(0.12345678901234567890);   // "0.12345678901235" (precision lost because the number passed is a PHP float)
 $cur = Currency::new()->customDecPl(20)->val('0.12345678901234567890'); // "0.12345678901234567890" (passed as a string)
 ```
 
@@ -188,7 +188,7 @@ Currency::new(5)->customDecPl(15)->div(4, 3, 2, 1); // $0.208333333333333
 Currency::new(5)->mul(4, 3, 2, 1); // $120.00
 ```
 
-*integer*, *float*, *numeric string* and *null* values, as well as other *Currency* objects may be passed:
+*Integer*, *float*, *numeric string* and *null* values, as well as other *Currency* objects may be passed:
 
 ``` php
 $cur1 = Currency::new(5);
@@ -314,7 +314,7 @@ Casting a Currency to a string is equivalent to calling `format()` with no argum
 print (string) Currency::new(1234567.89); // "$1,234,567.89"
 ```
 
-***NOTE***: Currency uses PHP's NumberFormatter to render the readable output, which currently has a limitation of being able to only show about 17 digits (including before the decimal place). So `format()`'s output will act a bit strangely if there are too many digits. The number stored inside will maintain it's full accuracy however. You may access the full number by reading the `val` property (see the [retrieving values](#retrieving-values) section above).
+***NOTE***: Currency uses PHP's NumberFormatter to render the readable output, which currently has a limitation of being able to only show about 17 digits (including before the decimal place). So `format()`'s output will act a bit strangely if there are too many digits. The number stored inside will maintain its full accuracy, however. You may access the full number by reading the `val` property (see the [retrieving values](#retrieving-values) section above).
 
 
 
@@ -482,13 +482,19 @@ print Currency::new(1)
 
 ### Laravel
 
-The Currency package is framework agnostic and works well on it's own, but it also integrates with Laravel 5, 6 & 7.
+The Currency package is framework agnostic and works well on its own, but it also integrates with Laravel 5, 6, 7 & 8.
 
 
 
 #### Service-provider
 
-Currency integrates with Laravel 5.5+ automatically thanks to Laravel's package auto-detection. For Laravel 5.0 - 5.4, add the following line to **config/app.php**:
+Currency integrates with Laravel 5.5+ automatically thanks to Laravel's package auto-detection.
+
+Laravel's locale is registered with Currency, and is updated later if it changes.
+
+<details><summary>(Click here for Laravel <= 5.4)</summary>
+<p>
+For Laravel 5.0 - 5.4, add the following line to <b>config/app.php</b>:
 
 ``` php
 'providers' => [
@@ -497,8 +503,8 @@ Currency integrates with Laravel 5.5+ automatically thanks to Laravel's package 
     …
 ],
 ```
-
-The service-provider will register the starting locale with Currency and update it if it changes, so you don't have to.
+</p>
+</details>
 
 
 
