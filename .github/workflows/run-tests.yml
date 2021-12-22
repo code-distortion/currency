@@ -1,168 +1,172 @@
 name: run-tests
 
 on:
-    push:
-    schedule:
-        - cron: '0 0 * * 0'
+  push:
+  schedule:
+    - cron: '0 0 * * 0'
 
 jobs:
-    laravel-version-tests:
+  laravel-version-tests:
 
-        name: Laravel ver test - PHP ${{ matrix.php }} - TestBench ${{ matrix.testbench}} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
+    name: Laravel ver test - PHP ${{ matrix.php }} - TestBench ${{ matrix.testbench}} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
 
-        runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-        strategy:
-            fail-fast: false
-            matrix:
-                os: [ubuntu-latest]
-                php: [7.4]
-                testbench: [^6.0, ^5.0, ^4.0, 3.8.*, 3.7.*, 3.6.*, 3.5.*, 3.4.*, 3.3.*, 3.2.*]
-                dependency-prefer: [prefer-stable, prefer-lowest]
-                include:
-                    -   testbench: ^6.0
-                        phpunit: ^8.5 || ^9.0
-                    -   testbench: ^5.0
-                        phpunit: ^8.5 || ^9.0
-                    -   testbench: ^4.0
-                        phpunit: ^8.4 || ^9.0
-                    -   testbench: 3.8.*
-                        phpunit: ^7.5 || ^8.0
-                    -   testbench: 3.7.*
-                        phpunit: ^7.0
-                    -   testbench: 3.6.*
-                        phpunit: ^7.0
-                    -   testbench: 3.5.*
-                        phpunit: ~6.0
-                    -   testbench: 3.4.*
-                        phpunit: ~5.7
-                    -   testbench: 3.3.*
-                        phpunit: ~4.8 || ~5.0
-                    -   testbench: 3.2.*
-                        phpunit: ~4.8|~5.0
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        php: [7.4]
+        testbench: [^6.0, ^5.0, ^4.0, 3.8.*, 3.7.*, 3.6.*, 3.5.*, 3.4.*, 3.3.*, 3.2.*]
+        dependency-prefer: [prefer-stable, prefer-lowest]
+        include:
+          - testbench: ^6.0
+            phpunit: ^8.5 || ^9.0
+          - testbench: ^5.0
+            phpunit: ^8.5 || ^9.0
+          - testbench: ^4.0
+            phpunit: ^8.4 || ^9.0
+          - testbench: 3.8.*
+            phpunit: ^7.5 || ^8.0
+          - testbench: 3.7.*
+            phpunit: ^7.0
+          - testbench: 3.6.*
+            phpunit: ^7.0
+          - testbench: 3.5.*
+            phpunit: ~6.0
+          - testbench: 3.4.*
+            phpunit: ~5.7
+          - testbench: 3.3.*
+            phpunit: ~4.8 || ~5.0
+          - testbench: 3.2.*
+            phpunit: ~4.8|~5.0
 
-        steps:
-            -   name: Checkout code
-                uses: actions/checkout@v1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    extensions: bcmath, intl, mbstring
-                    coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, intl, mbstring
+          coverage: none
 
-            # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
-            -   name: Determine composer's cache directory
-                id: composer-cache
-                run: |
-                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+      # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
+      - name: Determine composer's cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Cache dependencies (composer)
-                uses: actions/cache@v1
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: php-${{ matrix.php }}-testbench-${{ matrix.testbench }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+      - name: Cache dependencies (composer)
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: php-${{ matrix.php }}-testbench-${{ matrix.testbench }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
-            -   name: Install dependencies (composer)
-                run: |
-                    composer require "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update
-                    composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
+      - name: Install dependencies (composer)
+        run: |
+          composer require "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
 
-            -   name: Execute tests
-                run: vendor/bin/phpunit
+      - name: Execute tests
+        run: vendor/bin/phpunit
 
-    php8x-version-tests:
+  php8x-version-tests:
 
-        name: PHP 8.x ver test - PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
+    name: PHP 8.x ver test - PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
 
-        runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-        strategy:
-            fail-fast: false
-            matrix:
-#                os: [ubuntu-latest, macos-latest, windows-latest] # PHP 8.0 not available on windows yet?
-                os: [ubuntu-latest, macos-latest]
-                php: ['8.0']
-                dependency-prefer: [prefer-stable, prefer-lowest]
-                include:
-                    -   php: '8.0'
-                        testbench: ^6.0 | ^5.0 | ^4.0 | 3.8.* | 3.7.* | 3.6.* | 3.5.* # omit Laravel <= 5.4 for this PHP 8.x test
+    strategy:
+      fail-fast: false
+      matrix:
+#        os: [ubuntu-latest, macos-latest, windows-latest] # PHP 8.0 not available on windows yet?
+        os: [ubuntu-latest, macos-latest]
+        php: [8.1, "8.0"]
+        dependency-prefer: [prefer-stable, prefer-lowest]
+        include:
+          - php: 8.1
+            testbench: ^6.0 | ^5.0 | ^4.0 | 3.8.* | 3.7.* | 3.6.* | 3.5.* # omit Laravel <= 5.4 for this PHP 8.x test
+            phpunit: ^9.3
+          - php: "8.0"
+            testbench: ^6.0 | ^5.0 | ^4.0 | 3.8.* | 3.7.* | 3.6.* | 3.5.* # omit Laravel <= 5.4 for this PHP 8.x test
+            phpunit: ^9.3
 
-        steps:
-            -   name: Checkout code
-                uses: actions/checkout@v1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    extensions: bcmath, intl, mbstring
-                    coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, intl, mbstring
+          coverage: none
 
-            # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
-            -   name: Determine composer's cache directory
-                id: composer-cache
-                run: |
-                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+      # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
+      - name: Determine composer's cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Cache dependencies (composer)
-                uses: actions/cache@v1
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+      - name: Cache dependencies (composer)
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
-            -   name: Install dependencies (composer)
-                run: |
-                    composer require "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-                    composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
+      - name: Install dependencies (composer)
+        run: |
+          composer require "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
 
-            -   name: Execute tests (standalone group)
-                run: vendor/bin/phpunit --group=standalone
+      - name: Execute tests (standalone group)
+        run: vendor/bin/phpunit --group=standalone
 
-    php7x-version-tests:
+  php7x-version-tests:
 
-        name: PHP 7.x ver test - PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
+    name: PHP 7.x ver test - PHP ${{ matrix.php }} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
 
-        runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-        strategy:
-            fail-fast: false
-            matrix:
-                os: [ubuntu-latest, macos-latest, windows-latest]
-                php: [7.4, 7.3, 7.2, 7.1]
-                dependency-prefer: [prefer-stable, prefer-lowest]
-                exclude:
-                    # the output for some numbers contains unexpected characters (they look correct but are different to every other os/php combination)
-                    -   php: 7.1
-                        os: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        php: [7.4, 7.3, 7.2, 7.1]
+        dependency-prefer: [prefer-stable, prefer-lowest]
+        exclude:
+          # the output for some numbers contains unexpected characters (they look correct but are different to every other os/php combination)
+          - php: 7.1
+            os: windows-latest
 
-        steps:
-            -   name: Checkout code
-                uses: actions/checkout@v1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
 
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    extensions: bcmath, intl, mbstring
-                    coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, intl, mbstring
+          coverage: none
 
-            # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
-            -   name: Determine composer's cache directory
-                id: composer-cache
-                run: |
-                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+      # find out composer's cache directory on the current os - for the "Cache composer dependencies" step below
+      - name: Determine composer's cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Cache dependencies (composer)
-                uses: actions/cache@v1
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+      - name: Cache dependencies (composer)
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
-            -   name: Install dependencies (composer)
-                run: |
-                    composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
+      - name: Install dependencies (composer)
+        run: |
+          composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction --no-suggest
 
-            -   name: Execute tests (standalone group)
-                run: vendor/bin/phpunit --group=standalone
+      - name: Execute tests (standalone group)
+        run: vendor/bin/phpunit --group=standalone

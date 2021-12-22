@@ -493,7 +493,7 @@ class Currency extends Base
             $numberFormatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $decPl);
             // remove the thousands separator if desired
             if (!$resolvedOptions['thousands']) {
-                $numberFormatter->setAttribute(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, null);
+                $numberFormatter->setAttribute(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, 0);
             }
 
 
