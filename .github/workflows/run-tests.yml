@@ -7,7 +7,53 @@ on:
 
 jobs:
 
-  laravel-version-tests:
+  laravel-version-tests-on-php-81:
+
+    name: Laravel ver test - PHP ${{ matrix.php }} - TestBench ${{ matrix.testbench}} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        php: [8.1]
+        testbench: [^7.0]
+        dependency-prefer: [prefer-stable, prefer-lowest]
+        include:
+          - testbench: ^7.0
+            phpunit: "^8.5 | ^9.0"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: bcmath, intl, mbstring
+          coverage: none
+
+#      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
+#      - name: Determine composer's cache directory
+#        id: composer-cache
+#        run: |
+#          echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache dependencies (composer)
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composer-cache.outputs.dir }}
+#          key: php-${{ matrix.php }}-testbench-${{ matrix.testbench }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+
+      - name: Install dependencies (composer)
+        run: |
+          composer require "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:${{ matrix.phpunit }}" --dev --no-interaction --no-update
+          composer update --${{ matrix.dependency-prefer }} --prefer-dist --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
+
+  laravel-version-tests-on-php-74:
 
     name: Laravel ver test - PHP ${{ matrix.php }} - TestBench ${{ matrix.testbench}} - ${{ matrix.os }} - ${{ matrix.dependency-prefer }}
     runs-on: ${{ matrix.os }}
@@ -51,17 +97,17 @@ jobs:
           extensions: bcmath, intl, mbstring
           coverage: none
 
-      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
-      - name: Determine composer's cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies (composer)
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: php-${{ matrix.php }}-testbench-${{ matrix.testbench }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+#      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
+#      - name: Determine composer's cache directory
+#        id: composer-cache
+#        run: |
+#          echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache dependencies (composer)
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composer-cache.outputs.dir }}
+#          key: php-${{ matrix.php }}-testbench-${{ matrix.testbench }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies (composer)
         run: |
@@ -95,17 +141,17 @@ jobs:
           extensions: bcmath, fileinfo, intl, mbstring
           coverage: none
 
-      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
-      - name: Determine composer's cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies (composer)
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+#      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
+#      - name: Determine composer's cache directory
+#        id: composer-cache
+#        run: |
+#          echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache dependencies (composer)
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composer-cache.outputs.dir }}
+#          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies (composer)
         run: |
@@ -141,17 +187,17 @@ jobs:
           extensions: bcmath, intl, mbstring
           coverage: none
 
-      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
-      - name: Determine composer's cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies (composer)
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
+#      # find out composer's cache directory on the current os - for the "Cache dependencies (composer)" step below
+#      - name: Determine composer's cache directory
+#        id: composer-cache
+#        run: |
+#          echo "::set-output name=dir::$(composer config cache-files-dir)"
+#
+#      - name: Cache dependencies (composer)
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ steps.composer-cache.outputs.dir }}
+#          key: php-${{ matrix.php }}-os-${{ matrix.os }}-dependency-prefer-${{ matrix.dependency-prefer }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies (composer)
         run: |
