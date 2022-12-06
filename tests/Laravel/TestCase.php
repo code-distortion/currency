@@ -3,7 +3,7 @@
 namespace CodeDistortion\Currency\Tests\Laravel;
 
 use CodeDistortion\Currency\Laravel\ServiceProvider;
-use Jchook\AssertThrows\AssertThrows;
+//use Jchook\AssertThrows\AssertThrows;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 /**
@@ -11,7 +11,7 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
  */
 class TestCase extends BaseTestCase
 {
-    use AssertThrows;
+//    use AssertThrows;
 
     /**
      * Get package providers.
