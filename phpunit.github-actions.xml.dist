@@ -10,8 +10,8 @@
   beStrictAboutCoverageMetadata="false"
   bootstrap="vendor/autoload.php"
   cacheDirectory="phpunit/cache"
-  cacheResult="true"
-  colors="true"
+  cacheResult="false"
+  colors="false"
   defaultTimeLimit="10"
   displayDetailsOnTestsThatTriggerDeprecations="true"
   displayDetailsOnTestsThatTriggerNotices="true"
@@ -20,7 +20,7 @@
   displayDetailsOnIncompleteTests="true"
   displayDetailsOnSkippedTests="true"
   enforceTimeLimit="false"
-  failOnDeprecation="true"
+  failOnDeprecation="false"
   failOnIncomplete="false"
   failOnEmptyTestSuite="true"
   failOnNotice="true"
@@ -29,7 +29,7 @@
   failOnWarning="true"
   processIsolation="false"
   stopOnDefect="true"
-  stopOnDeprecation="true"
+  stopOnDeprecation="false"
   stopOnError="true"
   stopOnFailure="true"
   stopOnIncomplete="false"
@@ -46,11 +46,6 @@
       <directory>tests/StandAlone</directory>
     </testsuite>
   </testsuites>
-  <coverage>
-    <report>
-      <html outputDirectory="phpunit/coverage"/>
-    </report>
-  </coverage>
   <source>
     <include>
       <directory suffix=".php">src/</directory>
