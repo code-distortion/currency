@@ -2,6 +2,7 @@ name: "run-tests"
 
 on:
   push:
+  pull_request:
   schedule:
     - cron: "0 0 * * 0"
 
@@ -12,7 +13,7 @@ jobs:
     name: "Lara: PHP${{ matrix.php }} TB${{ matrix.testbench }} ${{ matrix.os-title }} ${{ matrix.dependency-prefer-title }}"
     runs-on: "${{ matrix.os }}"
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [ "ubuntu-latest" ]
         php: [ "8.3", "8.2", "8.1" ]
@@ -91,7 +92,7 @@ jobs:
     name: "Lara: PHP${{ matrix.php }} TB${{ matrix.testbench }} ${{ matrix.os-title }} ${{ matrix.dependency-prefer-title }}"
     runs-on: "${{ matrix.os }}"
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [ "ubuntu-latest" ]
         php: [ "7.4" ]
@@ -188,7 +189,7 @@ jobs:
     name: "PHP: PHP${{ matrix.php }} ${{ matrix.os-title }} ${{ matrix.dependency-prefer-title }}"
     runs-on: "${{ matrix.os }}"
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
         php: [ "8.3", "8.2", "8.1", "8.0" ]
@@ -270,7 +271,7 @@ jobs:
     name: "PHP: PHP${{ matrix.php }} ${{ matrix.os-title }} ${{ matrix.dependency-prefer-title }}"
     runs-on: "${{ matrix.os }}"
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [ "ubuntu-latest", "macos-latest", "windows-latest" ]
         php: [ "7.4", "7.3", "7.2", "7.1" ]
