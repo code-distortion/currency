@@ -9,7 +9,6 @@ use CodeDistortion\Currency\Tests\Laravel\TestCase;
 /**
  * Test the Currency's integration into Laravel.
  *
- * @group laravel
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  */
 class LaravelIntegrationTest extends TestCase
@@ -22,8 +21,8 @@ class LaravelIntegrationTest extends TestCase
      */
     public function test_service_provider(): void
     {
-        $this->assertSame('en', Currency::getDefaultLocale()); // default locale
+        self::assertSame('en', Currency::getDefaultLocale()); // default locale
         App::setLocale('en-AU');
-        $this->assertSame('en-AU', Currency::getDefaultLocale());
+        self::assertSame('en-AU', Currency::getDefaultLocale());
     }
 }

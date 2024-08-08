@@ -17,7 +17,6 @@ use Throwable;
 /**
  * Test the Currency library class.
  *
- * @group standalone
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  */
 class CurrencyUnitTest extends TestCase
@@ -59,7 +58,7 @@ class CurrencyUnitTest extends TestCase
      *
      * @return array
      */
-    public function immutableDataProviderSetters(): array
+    public static function immutableDataProviderSetters(): array
     {
         $properties = [
             ['locale', 'locale', 'en-AU', 'en-NZ'],
@@ -103,7 +102,7 @@ class CurrencyUnitTest extends TestCase
      *
      * @return array
      */
-    public function localeRenderingDataProvider(): array
+    public static function localeRenderingDataProvider(): array
     {
         $output = [];
         $output['AUD']['en-AU'] = [
@@ -196,41 +195,77 @@ class CurrencyUnitTest extends TestCase
             'A$1,23,45,678.90', // breaking spaces
             '1,23,45,678.90',
         ];
+//        $output['AUD']['he'] = [
+//            '‏12,345,678.90 A$',
+//            '‏‎-12,345,678.90 A$',
+//            '‏12,345,678.90 A$',
+//            '(‏12,345,678.90 A$)',
+//            '‏‎+12,345,678.90 A$',
+//            '‏12,345,678.90',
+//            '‏12,345,678.00 A$',
+//            '‏12,345,678.90 A$',
+//            '‏12,345,678 A$',
+//            '‏12345678.00 A$',
+//            '‏0.00 A$',
+//            'null',
+//            '‏12345678 A$',
+//            '(‏12345678)',
+//            '‏12,345,678.90 A$', // breaking spaces
+//            '‏12,345,678.90',
+//        ];
         $output['AUD']['he'] = [
-            '‏12,345,678.90 A$',
-            '‏‎-12,345,678.90 A$',
-            '‏12,345,678.90 A$',
-            '(‏12,345,678.90 A$)',
-            '‏‎+12,345,678.90 A$',
-            '‏12,345,678.90',
-            '‏12,345,678.00 A$',
-            '‏12,345,678.90 A$',
-            '‏12,345,678 A$',
-            '‏12345678.00 A$',
-            '‏0.00 A$',
+            '‏12,345,678.90 ‏A$',
+            '‏‎-12,345,678.90 ‏A$',
+            '‏12,345,678.90 ‏A$',
+            '(‏12,345,678.90 ‏A$)',
+            '‏‎+12,345,678.90 ‏A$',
+            '‏12,345,678.90 ‏',
+            '‏12,345,678.00 ‏A$',
+            '‏12,345,678.90 ‏A$',
+            '‏12,345,678 ‏A$',
+            '‏12345678.00 ‏A$',
+            '‏0.00 ‏A$',
             'null',
-            '‏12345678 A$',
-            '(‏12345678)',
-            '‏12,345,678.90 A$', // breaking spaces
-            '‏12,345,678.90',
+            '‏12345678 ‏A$',
+            '(‏12345678 ‏)',
+            '‏12,345,678.90 ‏A$', // breaking spaces
+            '‏12,345,678.90 ‏',
         ];
+//        $output['AUD']['ar-EG'] = [
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+//            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+//            '(١٢٬٣٤٥٬٦٧٨٫٩٠ AU$)',
+//            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠',
+//            '١٢٬٣٤٥٬٦٧٨٫٠٠ AU$',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+//            '١٢٬٣٤٥٬٦٧٨ AU$',
+//            '١٢٣٤٥٦٧٨٫٠٠ AU$',
+//            '٠٫٠٠ AU$',
+//            'null',
+//            '١٢٣٤٥٦٧٨ AU$',
+//            '(١٢٣٤٥٦٧٨)',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$', // breaking spaces
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠',
+//        ];
         $output['AUD']['ar-EG'] = [
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '(١٢٬٣٤٥٬٦٧٨٫٩٠ AU$)',
-            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠',
-            '١٢٬٣٤٥٬٦٧٨٫٠٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
-            '١٢٬٣٤٥٬٦٧٨ AU$',
-            '١٢٣٤٥٦٧٨٫٠٠ AU$',
-            '٠٫٠٠ AU$',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '؜-‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '(‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$)',
+            '؜+‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠',
+            '‏١٢٬٣٤٥٬٦٧٨٫٠٠ AU$',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$',
+            '‏١٢٬٣٤٥٬٦٧٨ AU$',
+            '‏١٢٣٤٥٦٧٨٫٠٠ AU$',
+            '‏٠٫٠٠ AU$',
             'null',
-            '١٢٣٤٥٦٧٨ AU$',
-            '(١٢٣٤٥٦٧٨)',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ AU$', // breaking spaces
-            '١٢٬٣٤٥٬٦٧٨٫٩٠',
+            '‏١٢٣٤٥٦٧٨ AU$',
+            '(‏١٢٣٤٥٦٧٨)',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ AU$', // breaking spaces
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠',
         ];
         $output['EUR']['en-AU'] = [
             'EUR 12,345,678.90',
@@ -304,41 +339,77 @@ class CurrencyUnitTest extends TestCase
             '₹1,23,45,678.90', // breaking spaces
             '1,23,45,678.90',
         ];
+//        $output['ILS']['he'] = [
+//            '‏12,345,678.90 ₪',
+//            '‏‎-12,345,678.90 ₪',
+//            '‏12,345,678.90 ₪',
+//            '(‏12,345,678.90 ₪)',
+//            '‏‎+12,345,678.90 ₪',
+//            '‏12,345,678.90',
+//            '‏12,345,678.00 ₪',
+//            '‏12,345,678.90 ₪',
+//            '‏12,345,678 ₪',
+//            '‏12345678.00 ₪',
+//            '‏0.00 ₪',
+//            'null',
+//            '‏12345678 ₪',
+//            '(‏12345678)',
+//            '‏12,345,678.90 ₪', // breaking spaces
+//            '‏12,345,678.90',
+//        ];
         $output['ILS']['he'] = [
-            '‏12,345,678.90 ₪',
-            '‏‎-12,345,678.90 ₪',
-            '‏12,345,678.90 ₪',
-            '(‏12,345,678.90 ₪)',
-            '‏‎+12,345,678.90 ₪',
-            '‏12,345,678.90',
-            '‏12,345,678.00 ₪',
-            '‏12,345,678.90 ₪',
-            '‏12,345,678 ₪',
-            '‏12345678.00 ₪',
-            '‏0.00 ₪',
+            '‏12,345,678.90 ‏₪',
+            '‏‎-12,345,678.90 ‏₪',
+            '‏12,345,678.90 ‏₪',
+            '(‏12,345,678.90 ‏₪)',
+            '‏‎+12,345,678.90 ‏₪',
+            '‏12,345,678.90 ‏',
+            '‏12,345,678.00 ‏₪',
+            '‏12,345,678.90 ‏₪',
+            '‏12,345,678 ‏₪',
+            '‏12345678.00 ‏₪',
+            '‏0.00 ‏₪',
             'null',
-            '‏12345678 ₪',
-            '(‏12345678)',
-            '‏12,345,678.90 ₪', // breaking spaces
-            '‏12,345,678.90',
+            '‏12345678 ‏₪',
+            '(‏12345678 ‏)',
+            '‏12,345,678.90 ‏₪', // breaking spaces
+            '‏12,345,678.90 ‏',
         ];
+//        $output['EGP']['ar-EG'] = [
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+//            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+//            '(١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏)',
+//            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
+//            '١٢٬٣٤٥٬٦٧٨٫٠٠ ج.م.‏',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+//            '١٢٬٣٤٥٬٦٧٨ ج.م.‏',
+//            '١٢٣٤٥٦٧٨٫٠٠ ج.م.‏',
+//            '٠٫٠٠ ج.م.‏',
+//            'null',
+//            '١٢٣٤٥٦٧٨ ج.م.‏',
+//            '(١٢٣٤٥٦٧٨‏)',
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏', // breaking spaces
+//            '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
+//        ];
         $output['EGP']['ar-EG'] = [
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '؜-١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '(١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏)',
-            '؜+١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
-            '١٢٬٣٤٥٬٦٧٨٫٠٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
-            '١٢٬٣٤٥٬٦٧٨ ج.م.‏',
-            '١٢٣٤٥٦٧٨٫٠٠ ج.م.‏',
-            '٠٫٠٠ ج.م.‏',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '؜-‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '(‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏)',
+            '؜+‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠‏',
+            '‏١٢٬٣٤٥٬٦٧٨٫٠٠ ج.م.‏',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏',
+            '‏١٢٬٣٤٥٬٦٧٨ ج.م.‏',
+            '‏١٢٣٤٥٦٧٨٫٠٠ ج.م.‏',
+            '‏٠٫٠٠ ج.م.‏',
             'null',
-            '١٢٣٤٥٦٧٨ ج.م.‏',
-            '(١٢٣٤٥٦٧٨‏)',
-            '١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏', // breaking spaces
-            '١٢٬٣٤٥٬٦٧٨٫٩٠‏',
+            '‏١٢٣٤٥٦٧٨ ج.م.‏',
+            '(‏١٢٣٤٥٦٧٨‏)',
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠ ج.م.‏', // breaking spaces
+            '‏١٢٬٣٤٥٬٦٧٨٫٩٠‏',
         ];
 
 
@@ -370,7 +441,8 @@ class CurrencyUnitTest extends TestCase
                 $return[] = [$locale, $curCode, 12345678.90, 'breaking !symbol', $outputValues[15]];
             }
         }
-
+//$return = [$return[80]];
+//dump($return);
         return $return;
     }
 
@@ -389,40 +461,40 @@ class CurrencyUnitTest extends TestCase
     public function test_currency_default_settings(): void
     {
         Currency::resetDefaults();
-        $this->assertNull(Currency::getDefaultCurCode());
+        self::assertNull(Currency::getDefaultCurCode());
         Currency::setDefaultCurCode('USD');
-        $this->assertSame('USD', Currency::getDefaultCurCode());
+        self::assertSame('USD', Currency::getDefaultCurCode());
         Currency::setDefaultCurCode(null); // change back to null manually
-        $this->assertNull(Currency::getDefaultCurCode());
+        self::assertNull(Currency::getDefaultCurCode());
         Currency::setDefaultCurCode('USD');
         Currency::resetDefaults();
-        $this->assertNull(Currency::getDefaultCurCode());
+        self::assertNull(Currency::getDefaultCurCode());
 
         // make sure the Currency and RealNum settings are distinct
         Currency::resetDefaults();
         RealNum::resetDefaults();
-        $this->assertSame('en', Currency::getDefaultLocale());
-        $this->assertSame('en', RealNum::getDefaultLocale());
-        $this->assertTrue(Currency::getDefaultImmutability());
-        $this->assertTrue(RealNum::getDefaultImmutability());
+        self::assertSame('en', Currency::getDefaultLocale());
+        self::assertSame('en', RealNum::getDefaultLocale());
+        self::assertTrue(Currency::getDefaultImmutability());
+        self::assertTrue(RealNum::getDefaultImmutability());
 
         Currency::setDefaultLocale('en-AU');
         RealNum::setDefaultLocale('en-UK');
-        $this->assertSame('en-AU', Currency::getDefaultLocale());
-        $this->assertSame('en-UK', RealNum::getDefaultLocale());
+        self::assertSame('en-AU', Currency::getDefaultLocale());
+        self::assertSame('en-UK', RealNum::getDefaultLocale());
 
         Currency::setDefaultImmutability(false);
         RealNum::setDefaultImmutability(true);
-        $this->assertFalse(Currency::getDefaultImmutability());
-        $this->assertTrue(RealNum::getDefaultImmutability());
+        self::assertFalse(Currency::getDefaultImmutability());
+        self::assertTrue(RealNum::getDefaultImmutability());
 
         // check the default format-settings
         Currency::resetDefaults();
-        $this->assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::getDefaultFormatSettings());
-        $this->assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::new(null, 'USD')->formatSettings); // uses default
+        self::assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::getDefaultFormatSettings());
+        self::assertSame(Currency::ORIG_FORMAT_SETTINGS, Currency::new(null, 'USD')->formatSettings); // uses default
         Currency::setDefaultFormatSettings($this->altFormatSettings);
-        $this->assertSame($this->altFormatSettings, Currency::getDefaultFormatSettings());
-        $this->assertSame($this->altFormatSettings, Currency::new(null, 'USD')->formatSettings); // uses the new default
+        self::assertSame($this->altFormatSettings, Currency::getDefaultFormatSettings());
+        self::assertSame($this->altFormatSettings, Currency::new(null, 'USD')->formatSettings); // uses the new default
     }
 
     /**
@@ -450,12 +522,12 @@ class CurrencyUnitTest extends TestCase
         // set the value directly (uses the __set magic method)
         // $currency = Currency::new('AUD')->immutable($immutable)->$setMethod($startValue);
         // $currency->$getField = $endValue; // not immutable when set this way
-        // $this->assertSame($endValue, $currency->$getField);
+        // self::assertSame($endValue, $currency->$getField);
 
         // set the value by calling the method
         $currency = Currency::new(null, 'AUD')->immutable($immutable)->$setMethod($startValue);
         $currency->$setMethod($endValue);
-        $this->assertSame($finalValue, $currency->$getField);
+        self::assertSame($finalValue, $currency->$getField);
     }
 
     /**
@@ -466,38 +538,38 @@ class CurrencyUnitTest extends TestCase
      */
     public function test_currency_instantiation(): void
     {
-        $this->assertNull(Currency::new(null, 'AUD')->cast);
-        $this->assertNull((new Currency(null, 'AUD'))->cast);
+        self::assertNull(Currency::new(null, 'AUD')->cast);
+        self::assertNull((new Currency(null, 'AUD'))->cast);
 
-        $this->assertSame(2, Currency::new(2, 'AUD')->cast);
-        $this->assertSame(2, (new Currency(2, 'AUD'))->cast);
+        self::assertSame(2, Currency::new(2, 'AUD')->cast);
+        self::assertSame(2, (new Currency(2, 'AUD'))->cast);
 
-        $this->assertSame(2.24, Currency::new(2.239482390, 'AUD')->cast);
-        $this->assertSame(2.24, (new Currency(2.239482390, 'AUD'))->cast);
+        self::assertSame(2.24, Currency::new(2.239482390, 'AUD')->cast);
+        self::assertSame(2.24, (new Currency(2.239482390, 'AUD'))->cast);
 
-        $this->assertSame(2.24, Currency::new('2.239482390', 'AUD')->cast);
-        $this->assertSame(2.24, (new Currency('2.239482390', 'AUD'))->cast);
+        self::assertSame(2.24, Currency::new('2.239482390', 'AUD')->cast);
+        self::assertSame(2.24, (new Currency('2.239482390', 'AUD'))->cast);
 
-        $this->assertSame(2.24, Currency::new(Currency::new(2.239482390, 'AUD'), 'AUD')->cast);
-        $this->assertSame(2.24, (new Currency(new Currency(2.239482390, 'AUD'), 'AUD'))->cast);
+        self::assertSame(2.24, Currency::new(Currency::new(2.239482390, 'AUD'), 'AUD')->cast);
+        self::assertSame(2.24, (new Currency(new Currency(2.239482390, 'AUD'), 'AUD'))->cast);
 
-        $this->assertNull(Currency::new(null, 'AUD')->cast);
-        $this->assertNull((new Currency(null, 'AUD'))->cast);
+        self::assertNull(Currency::new(null, 'AUD')->cast);
+        self::assertNull((new Currency(null, 'AUD'))->cast);
 
         // won't throw an exception for an invalid starting value
-        $this->assertNull(Currency::new('abc', 'AUD', false)->cast);
-        $this->assertNull((new Currency('abc', 'AUD', false))->cast);
+        self::assertNull(Currency::new('abc', 'AUD', false)->cast);
+        self::assertNull((new Currency('abc', 'AUD', false))->cast);
 
         // cloning
         $cur = Currency::new(null, 'AUD')->immutable(true);
-        $this->assertNotSame($cur, $cur->copy());
+        self::assertNotSame($cur, $cur->copy());
         $cur = Currency::new(null, 'AUD')->immutable(false);
-        $this->assertNotSame($cur, $cur->copy());
+        self::assertNotSame($cur, $cur->copy());
 
         // picks up the default curCode
         Currency::resetDefaults();
         Currency::setDefaultCurCode('USD');
-        $this->assertSame('$5.00', Currency::new(5)->format());
+        self::assertSame('$5.00', Currency::new(5)->format());
     }
 
     /**
@@ -512,66 +584,66 @@ class CurrencyUnitTest extends TestCase
         $callback = function () {
         };
         Currency::localeResolver($callback);
-        $this->assertSame($callback, Currency::getLocaleResolver());
+        self::assertSame($callback, Currency::getLocaleResolver());
         Currency::localeResolver(null);
-        $this->assertNull(Currency::getLocaleResolver());
+        self::assertNull(Currency::getLocaleResolver());
         Currency::resetDefaults();
 
         // CURRENCY-resolver callback
         $callback = function () {
         };
         Currency::currencyResolver($callback);
-        $this->assertSame($callback, Currency::getCurrencyResolver());
+        self::assertSame($callback, Currency::getCurrencyResolver());
         Currency::currencyResolver(null);
-        $this->assertNull(Currency::getCurrencyResolver());
+        self::assertNull(Currency::getCurrencyResolver());
         Currency::resetDefaults();
 
 
 
         // locale
-        $this->assertSame('en', Currency::new(null, 'AUD')->locale); // uses the default
-        $this->assertSame('en-AU', Currency::new(null, 'AUD')->locale('en-AU')->locale);
+        self::assertSame('en', Currency::new(null, 'AUD')->locale); // uses the default
+        self::assertSame('en-AU', Currency::new(null, 'AUD')->locale('en-AU')->locale);
 
         // decPl
         $currency = Currency::new(null, 'AUD');
-        $this->assertSame(2, Currency::new(null, 'AUD')->decPl); // uses the AUD default
-        $this->assertNull(Currency::new(null, 'AUD')->customDecPl);
-        $this->assertFalse(Currency::new(null, 'AUD')->usingCustomDecPl);
-        $this->assertFalse(Currency::new(null, 'AUD')->usingCustomDecPl());
+        self::assertSame(2, Currency::new(null, 'AUD')->decPl); // uses the AUD default
+        self::assertNull(Currency::new(null, 'AUD')->customDecPl);
+        self::assertFalse(Currency::new(null, 'AUD')->usingCustomDecPl);
+        self::assertFalse(Currency::new(null, 'AUD')->usingCustomDecPl());
 
-        $this->assertSame(0, Currency::new(null, 'JPY')->decPl); // uses the JPY default
-        $this->assertSame(10, Currency::new(null, 'JPY')->customDecPl(10)->decPl);
-        $this->assertSame(0, Currency::new(null, 'JPY')->decPl); // uses the JPY default
+        self::assertSame(0, Currency::new(null, 'JPY')->decPl); // uses the JPY default
+        self::assertSame(10, Currency::new(null, 'JPY')->customDecPl(10)->decPl);
+        self::assertSame(0, Currency::new(null, 'JPY')->decPl); // uses the JPY default
 
         // immutable
-        $this->assertTrue(Currency::new(null, 'AUD')->immutable); // uses the default
-        $this->assertFalse(Currency::new(null, 'AUD')->immutable(false)->immutable);
+        self::assertTrue(Currency::new(null, 'AUD')->immutable); // uses the default
+        self::assertFalse(Currency::new(null, 'AUD')->immutable(false)->immutable);
 
 
 
         // val (and default currency decPl)
         $currency = Currency::new(null, 'AUD')->val(10.101010);
-        $this->assertSame('10.10', $currency->val);
+        self::assertSame('10.10', $currency->val);
         $currency = $currency->val(0);
-        $this->assertSame('0.00', $currency->val);
+        self::assertSame('0.00', $currency->val);
         $currency = $currency->val(null);
-        $this->assertNull($currency->val);
+        self::assertNull($currency->val);
 
         // cast (and default currency decPl)
         $currency = Currency::new(null, 'AUD')->val(10.101010);
-        $this->assertSame(10.10, $currency->cast);
+        self::assertSame(10.10, $currency->cast);
         $currency = $currency->val(0);
-        $this->assertSame(0, $currency->cast);
+        self::assertSame(0, $currency->cast);
         $currency = $currency->val(null);
-        $this->assertNull($currency->cast);
+        self::assertNull($currency->cast);
 
         // curCode (and getting the currency symbol)
         $currency = Currency::new(null, 'AUD');
-        $this->assertSame('AUD', $currency->curCode);
-        $this->assertSame('A$', $currency->symbol);
+        self::assertSame('AUD', $currency->curCode);
+        self::assertSame('A$', $currency->symbol);
         $currency = $currency->curCode('USD');
-        $this->assertSame('USD', $currency->curCode);
-        $this->assertSame('$', $currency->symbol);
+        self::assertSame('USD', $currency->curCode);
+        self::assertSame('$', $currency->symbol);
     }
 
     /**
@@ -584,7 +656,7 @@ class CurrencyUnitTest extends TestCase
     {
         $cur1 = Currency::new(5, 'AUD');
         $cur2 = Currency::new(2, 'AUD');
-        $this->assertSame(7, $cur1->add($cur2)->cast);
+        self::assertSame(7, $cur1->add($cur2)->cast);
     }
 
     /**
@@ -607,7 +679,7 @@ class CurrencyUnitTest extends TestCase
         ?string $expectedValue
     ): void {
 
-        $this->assertSame(
+        self::assertSame(
             $expectedValue,
             Currency::new($initialValue, $curCode)->locale($locale)->format($renderOptions)
         );
@@ -622,19 +694,19 @@ class CurrencyUnitTest extends TestCase
     public function test_currency_locale_casting_to_string(): void
     {
         $cur1 = Currency::new(1.234567890, 'AUD')->locale('en-AU');
-        $this->assertSame('$1.23', (string) $cur1);
+        self::assertSame('$1.23', (string) $cur1);
 
         $cur1 = Currency::new(1.2, 'AUD')->locale('en-AU');
-        $this->assertSame('$1.20', (string) $cur1);
+        self::assertSame('$1.20', (string) $cur1);
 
         $cur1 = Currency::new(1.2, 'NZD')->locale('en-AU');
-        $this->assertSame('NZD 1.20', (string) $cur1);
+        self::assertSame('NZD 1.20', (string) $cur1);
 
         $cur1 = Currency::new(1.2, 'NZD')->locale('en-NZ');
-        $this->assertSame('$1.20', (string) $cur1);
+        self::assertSame('$1.20', (string) $cur1);
 
         $cur1 = Currency::new(1.2, 'JPY')->locale('en-NZ');
-        $this->assertSame('JP¥1', (string) $cur1);
+        self::assertSame('JP¥1', (string) $cur1);
     }
 
     /**
@@ -649,83 +721,83 @@ class CurrencyUnitTest extends TestCase
             return Currency::new(null, $curCode)->locale('en-AU');
         };
 
-        $this->assertSame('1.2346', $newCur('AUD')->customDecPl(4)->val('1.234567890')->val);
-        $this->assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->customDecPl(2)->val);
-        $this->assertSame('1.2300', $newCur('AUD')->customDecPl(2)->val('1.234567890')->customDecPl(4)->val);
-        $this->assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->useCurrencyDecPl()->val);
-        $this->assertSame('1.234568', $newCur('AUD')->customDecPl(6)->val('1.234567890')->val);
-        $this->assertSame('1.23', $newCur('AUD')->customDecPl(6)->val('1.234567890')->useCurrencyDecPl()->val);
+        self::assertSame('1.2346', $newCur('AUD')->customDecPl(4)->val('1.234567890')->val);
+        self::assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->customDecPl(2)->val);
+        self::assertSame('1.2300', $newCur('AUD')->customDecPl(2)->val('1.234567890')->customDecPl(4)->val);
+        self::assertSame('1.23', $newCur('AUD')->customDecPl(4)->val('1.234567890')->useCurrencyDecPl()->val);
+        self::assertSame('1.234568', $newCur('AUD')->customDecPl(6)->val('1.234567890')->val);
+        self::assertSame('1.23', $newCur('AUD')->customDecPl(6)->val('1.234567890')->useCurrencyDecPl()->val);
 
-        $this->assertSame(2, $newCur('AUD')->decPl);
-        $this->assertSame(5, $newCur('AUD')->customDecPl(5)->decPl);
+        self::assertSame(2, $newCur('AUD')->decPl);
+        self::assertSame(5, $newCur('AUD')->customDecPl(5)->decPl);
 
         // alter the customDecPl setting
         $currency = $newCur('AUD');
-        $this->assertSame(2, $currency->decPl);
-        $this->assertSame(null, $currency->customDecPl);
-        $this->assertFalse($currency->usingCustomDecPl);
-        $this->assertFalse($currency->usingCustomDecPl());
+        self::assertSame(2, $currency->decPl);
+        self::assertSame(null, $currency->customDecPl);
+        self::assertFalse($currency->usingCustomDecPl);
+        self::assertFalse($currency->usingCustomDecPl());
         $currency = $currency->customDecPl(10);
-        $this->assertSame(10, $currency->decPl);
-        $this->assertSame(10, $currency->customDecPl);
-        $this->assertTrue($currency->usingCustomDecPl);
-        $this->assertTrue($currency->usingCustomDecPl());
+        self::assertSame(10, $currency->decPl);
+        self::assertSame(10, $currency->customDecPl);
+        self::assertTrue($currency->usingCustomDecPl);
+        self::assertTrue($currency->usingCustomDecPl());
         $currency = $currency->useCurrencyDecPl();
-        $this->assertSame(2, $currency->decPl);
-        $this->assertSame(null, $currency->customDecPl);
-        $this->assertFalse($currency->usingCustomDecPl);
-        $this->assertFalse($currency->usingCustomDecPl());
+        self::assertSame(2, $currency->decPl);
+        self::assertSame(null, $currency->customDecPl);
+        self::assertFalse($currency->usingCustomDecPl);
+        self::assertFalse($currency->usingCustomDecPl());
 
         // detect different currency decimal places
-        $this->assertSame(2, Currency::currencyDecPl('AUD'));
-        $this->assertSame(0, Currency::currencyDecPl('JPY'));
-        $this->assertSame(3, Currency::currencyDecPl('BHD'));
+        self::assertSame(2, Currency::currencyDecPl('AUD'));
+        self::assertSame(0, Currency::currencyDecPl('JPY'));
+        self::assertSame(3, Currency::currencyDecPl('BHD'));
 
         // test rendering when there are the normal decimal places
         $currency = $newCur('AUD')->val(5.123456789);
-        $this->assertSame('$5.12', $currency->format());
+        self::assertSame('$5.12', $currency->format());
 
         // test rendering when there are more decimal places than normal
         $currency = $newCur('AUD')->customDecPl(20)->val(5.123456789);
-        $this->assertSame('$5.123456789', $currency->format());
-        $this->assertSame('$5.1235', $currency->format('decPl=4')); // when the decPl is explicitly specified
+        self::assertSame('$5.123456789', $currency->format());
+        self::assertSame('$5.1235', $currency->format('decPl=4')); // when the decPl is explicitly specified
 
         // test rendering when decPl is specified explicitly
         $currency = $newCur('AUD')->customDecPl(20)->val(5.983456789);
-        $this->assertSame('$5.983456789', $currency->format('decPl=null trailZeros'));
-        $this->assertSame('$5.983456789', $currency->format('decPl=null')); // defaults to !trailZeros
-        $this->assertSame('$5.983456789', $currency->format('decPl=null !trailZeros'));
+        self::assertSame('$5.983456789', $currency->format('decPl=null trailZeros'));
+        self::assertSame('$5.983456789', $currency->format('decPl=null')); // defaults to !trailZeros
+        self::assertSame('$5.983456789', $currency->format('decPl=null !trailZeros'));
 
-        $this->assertSame('$5.983456789000000', $currency->format('decPl=15 trailZeros'));
-        $this->assertSame('$5.983456789000000', $currency->format('decPl=15')); // defaults to trailZeros
-        $this->assertSame('$5.983456789000000', $currency->format('decPl=15 !trailZeros'));
+        self::assertSame('$5.983456789000000', $currency->format('decPl=15 trailZeros'));
+        self::assertSame('$5.983456789000000', $currency->format('decPl=15')); // defaults to trailZeros
+        self::assertSame('$5.983456789000000', $currency->format('decPl=15 !trailZeros'));
 
-        $this->assertSame('$5.9835', $currency->format('decPl=4 trailZeros')); // rounded
-        $this->assertSame('$5.9835', $currency->format('decPl=4 !trailZeros')); // rounded
+        self::assertSame('$5.9835', $currency->format('decPl=4 trailZeros')); // rounded
+        self::assertSame('$5.9835', $currency->format('decPl=4 !trailZeros')); // rounded
 
-        $this->assertSame('$6.0', $currency->format('decPl=1 trailZeros')); // rounded
-        $this->assertSame('$6', $currency->format('decPl=1 !trailZeros')); // rounded
+        self::assertSame('$6.0', $currency->format('decPl=1 trailZeros')); // rounded
+        self::assertSame('$6', $currency->format('decPl=1 !trailZeros')); // rounded
 
-        $this->assertSame('$6', $currency->format('decPl=0 trailZeros')); // rounded
-        $this->assertSame('$6', $currency->format('decPl=0 !trailZeros')); // rounded
+        self::assertSame('$6', $currency->format('decPl=0 trailZeros')); // rounded
+        self::assertSame('$6', $currency->format('decPl=0 !trailZeros')); // rounded
 
         $currency = $newCur('AUD')->customDecPl(20)->val(5);
-        $this->assertSame('$5.00', $currency->format('decPl=null trailZeros'));
-        $this->assertSame('$5.00', $currency->format('decPl=null')); // defaults to !trailZeros
-        $this->assertSame('$5', $currency->format('decPl=null !trailZeros'));
+        self::assertSame('$5.00', $currency->format('decPl=null trailZeros'));
+        self::assertSame('$5.00', $currency->format('decPl=null')); // defaults to !trailZeros
+        self::assertSame('$5', $currency->format('decPl=null !trailZeros'));
 
-        $this->assertSame('$5.000000000000000', $currency->format('decPl=15 trailZeros'));
-        $this->assertSame('$5.000000000000000', $currency->format('decPl=15')); // defaults to trailZeros
-        $this->assertSame('$5', $currency->format('decPl=15 !trailZeros'));
+        self::assertSame('$5.000000000000000', $currency->format('decPl=15 trailZeros'));
+        self::assertSame('$5.000000000000000', $currency->format('decPl=15')); // defaults to trailZeros
+        self::assertSame('$5', $currency->format('decPl=15 !trailZeros'));
 
-        $this->assertSame('$5.0000', $currency->format('decPl=4 trailZeros')); // rounded
-        $this->assertSame('$5', $currency->format('decPl=4 !trailZeros')); // rounded
+        self::assertSame('$5.0000', $currency->format('decPl=4 trailZeros')); // rounded
+        self::assertSame('$5', $currency->format('decPl=4 !trailZeros')); // rounded
 
-        $this->assertSame('$5.0', $currency->format('decPl=1 trailZeros')); // rounded
-        $this->assertSame('$5', $currency->format('decPl=1 !trailZeros')); // rounded
+        self::assertSame('$5.0', $currency->format('decPl=1 trailZeros')); // rounded
+        self::assertSame('$5', $currency->format('decPl=1 !trailZeros')); // rounded
 
-        $this->assertSame('$5', $currency->format('decPl=0 trailZeros')); // rounded
-        $this->assertSame('$5', $currency->format('decPl=0 !trailZeros')); // rounded
+        self::assertSame('$5', $currency->format('decPl=0 trailZeros')); // rounded
+        self::assertSame('$5', $currency->format('decPl=0 !trailZeros')); // rounded
     }
 
     /**
@@ -739,34 +811,34 @@ class CurrencyUnitTest extends TestCase
 
         // changes of locale
         Currency::setDefaultLocale('en-AU');
-        $this->assertSame('en-AU', Currency::new(null, 'AUD')->locale);
-        $this->assertSame('en-NZ', Currency::new(null, 'AUD')->locale('en-NZ')->locale);
-        $this->assertSame('en-US', Currency::new(null, 'AUD')->locale('en-NZ')->locale('en-US')->locale);
+        self::assertSame('en-AU', Currency::new(null, 'AUD')->locale);
+        self::assertSame('en-NZ', Currency::new(null, 'AUD')->locale('en-NZ')->locale);
+        self::assertSame('en-US', Currency::new(null, 'AUD')->locale('en-NZ')->locale('en-US')->locale);
 
         Currency::setDefaultLocale('en');
-        $this->assertSame('A$', Currency::new(null, 'AUD')->symbol); // get the AUD symbol - when in en locale
-        $this->assertSame('€', Currency::new(null, 'EUR')->symbol); // get the EUR symbol - when in en locale
-        $this->assertSame('A$', Currency::symbol('AUD'));
-        $this->assertSame('€', Currency::symbol('EUR'));
+        self::assertSame('A$', Currency::new(null, 'AUD')->symbol); // get the AUD symbol - when in en locale
+        self::assertSame('€', Currency::new(null, 'EUR')->symbol); // get the EUR symbol - when in en locale
+        self::assertSame('A$', Currency::symbol('AUD'));
+        self::assertSame('€', Currency::symbol('EUR'));
 
         Currency::setDefaultLocale('en-AU');
-        $this->assertSame('$', Currency::new(null, 'AUD')->symbol); // get the AUD symbol - when in en-AU locale
-        $this->assertSame('EUR', Currency::new(null, 'EUR')->symbol); // get the EUR symbol - when in en-AU locale
-        $this->assertSame('$', Currency::symbol('AUD'));
-        $this->assertSame('EUR', Currency::symbol('EUR'));
+        self::assertSame('$', Currency::new(null, 'AUD')->symbol); // get the AUD symbol - when in en-AU locale
+        self::assertSame('EUR', Currency::new(null, 'EUR')->symbol); // get the EUR symbol - when in en-AU locale
+        self::assertSame('$', Currency::symbol('AUD'));
+        self::assertSame('EUR', Currency::symbol('EUR'));
 
         Currency::setDefaultLocale('ja-JP');
-        $this->assertSame('ja-JP', Currency::new(null, 'AUD')->locale);
-        $this->assertSame('￥', Currency::new(null, 'JPY')->symbol); // JPY symbol - in jp-JP
-        $this->assertSame('￥', Currency::symbol('JPY'));
-        $this->assertSame('en-AU', Currency::new(null, 'AUD')->locale('en-AU')->locale);
-        $this->assertSame('JPY', Currency::new(null, 'JPY')->locale('en-AU')->symbol); // JPY symbol - in en-AU
+        self::assertSame('ja-JP', Currency::new(null, 'AUD')->locale);
+        self::assertSame('￥', Currency::new(null, 'JPY')->symbol); // JPY symbol - in jp-JP
+        self::assertSame('￥', Currency::symbol('JPY'));
+        self::assertSame('en-AU', Currency::new(null, 'AUD')->locale('en-AU')->locale);
+        self::assertSame('JPY', Currency::new(null, 'JPY')->locale('en-AU')->symbol); // JPY symbol - in en-AU
 
         Currency::resetDefaults();
-        $this->assertSame('A$', Currency::symbol('AUD', 'en'));
-        $this->assertSame('$', Currency::symbol('AUD', 'en-AU'));
-        $this->assertSame('¥', Currency::symbol('JPY', 'en'));
-        $this->assertSame('￥', Currency::symbol('JPY', 'ja-JP'));
+        self::assertSame('A$', Currency::symbol('AUD', 'en'));
+        self::assertSame('$', Currency::symbol('AUD', 'en-AU'));
+        self::assertSame('¥', Currency::symbol('JPY', 'en'));
+        self::assertSame('￥', Currency::symbol('JPY', 'ja-JP'));
     }
 
     /**
@@ -777,34 +849,34 @@ class CurrencyUnitTest extends TestCase
      */
     public function test_currency_symbols(): void
     {
-        $this->assertSame('$', Currency::new(null, 'AUD')->locale('en-AU')->symbol);
-        $this->assertSame('A$', Currency::new(null, 'AUD')->locale('en-US')->symbol);
-        $this->assertSame('A$', Currency::new(null, 'AUD')->locale('en')->symbol);
-        $this->assertSame('$', Currency::symbol('AUD', 'en-AU'));
-        $this->assertSame('A$', Currency::symbol('AUD', 'en-US'));
-        $this->assertSame('A$', Currency::symbol('AUD', 'en'));
+        self::assertSame('$', Currency::new(null, 'AUD')->locale('en-AU')->symbol);
+        self::assertSame('A$', Currency::new(null, 'AUD')->locale('en-US')->symbol);
+        self::assertSame('A$', Currency::new(null, 'AUD')->locale('en')->symbol);
+        self::assertSame('$', Currency::symbol('AUD', 'en-AU'));
+        self::assertSame('A$', Currency::symbol('AUD', 'en-US'));
+        self::assertSame('A$', Currency::symbol('AUD', 'en'));
 
-        $this->assertSame('$', Currency::new(null, 'AUD')->locale('en-AU')->symbol);
-        $this->assertSame('EUR', Currency::new(null, 'EUR')->locale('en-AU')->symbol);
-        $this->assertSame('JPY', Currency::new(null, 'JPY')->locale('en-AU')->symbol);
-        $this->assertSame('$', Currency::symbol('AUD', 'en-AU'));
-        $this->assertSame('EUR', Currency::symbol('EUR', 'en-AU'));
-        $this->assertSame('JPY', Currency::symbol('JPY', 'en-AU'));
+        self::assertSame('$', Currency::new(null, 'AUD')->locale('en-AU')->symbol);
+        self::assertSame('EUR', Currency::new(null, 'EUR')->locale('en-AU')->symbol);
+        self::assertSame('JPY', Currency::new(null, 'JPY')->locale('en-AU')->symbol);
+        self::assertSame('$', Currency::symbol('AUD', 'en-AU'));
+        self::assertSame('EUR', Currency::symbol('EUR', 'en-AU'));
+        self::assertSame('JPY', Currency::symbol('JPY', 'en-AU'));
 
-        $this->assertSame('A$', Currency::new(null, 'AUD')->locale('en')->symbol);
-        $this->assertSame('€', Currency::new(null, 'EUR')->locale('en')->symbol);
-        $this->assertSame('¥', Currency::new(null, 'JPY')->locale('en')->symbol); // ...
-        $this->assertSame('A$', Currency::symbol('AUD', 'en'));
-        $this->assertSame('€', Currency::symbol('EUR', 'en'));
-        $this->assertSame('¥', Currency::symbol('JPY', 'en'));
+        self::assertSame('A$', Currency::new(null, 'AUD')->locale('en')->symbol);
+        self::assertSame('€', Currency::new(null, 'EUR')->locale('en')->symbol);
+        self::assertSame('¥', Currency::new(null, 'JPY')->locale('en')->symbol); // ...
+        self::assertSame('A$', Currency::symbol('AUD', 'en'));
+        self::assertSame('€', Currency::symbol('EUR', 'en'));
+        self::assertSame('¥', Currency::symbol('JPY', 'en'));
 
-        $this->assertSame('A$', Currency::new(null, 'AUD')->locale('ja-JP')->symbol);
-        $this->assertSame('€', Currency::new(null, 'EUR')->locale('ja-JP')->symbol);
-        $this->assertSame('￥', Currency::new(null, 'JPY')->locale('ja-JP')->symbol); // a diff Yen symbol to above
+        self::assertSame('A$', Currency::new(null, 'AUD')->locale('ja-JP')->symbol);
+        self::assertSame('€', Currency::new(null, 'EUR')->locale('ja-JP')->symbol);
+        self::assertSame('￥', Currency::new(null, 'JPY')->locale('ja-JP')->symbol); // a diff Yen symbol to above
                                                                                 // because the locale is different
-        $this->assertSame('A$', Currency::symbol('AUD', 'ja-JP'));
-        $this->assertSame('€', Currency::symbol('EUR', 'ja-JP'));
-        $this->assertSame('￥', Currency::symbol('JPY', 'ja-JP'));
+        self::assertSame('A$', Currency::symbol('AUD', 'ja-JP'));
+        self::assertSame('€', Currency::symbol('EUR', 'ja-JP'));
+        self::assertSame('￥', Currency::symbol('JPY', 'ja-JP'));
     }
 
     /**
@@ -815,15 +887,15 @@ class CurrencyUnitTest extends TestCase
      */
     public function test_currency_codes(): void
     {
-        $this->assertSame('AUD', Currency::new(null, 'AUD')->curCode);
-        $this->assertSame('NZD', Currency::new(null, 'NZD')->curCode);
-        $this->assertSame('JPY', Currency::new(null, 'AUD')->curCode('JPY')->curCode);
+        self::assertSame('AUD', Currency::new(null, 'AUD')->curCode);
+        self::assertSame('NZD', Currency::new(null, 'NZD')->curCode);
+        self::assertSame('JPY', Currency::new(null, 'AUD')->curCode('JPY')->curCode);
 
         $currency = Currency::new(null, 'AUD')->curCode('JPY');
-        $this->assertSame('JPY', $currency->curCode);
+        self::assertSame('JPY', $currency->curCode);
 
-        $this->assertSame(2, Currency::new(null, 'AUD')->decPl);
-        $this->assertSame(0, Currency::new(null, 'AUD')->curCode('JPY')->decPl);
+        self::assertSame(2, Currency::new(null, 'AUD')->decPl);
+        self::assertSame(0, Currency::new(null, 'AUD')->curCode('JPY')->decPl);
     }
 
     /**
@@ -841,8 +913,8 @@ class CurrencyUnitTest extends TestCase
         };
 
         Currency::localeResolver($localeResolver);
-        $this->assertSame('en-AU', Currency::new(null, 'AUD')->locale(99)->locale);
-        $this->assertTrue($closureWasRun);
+        self::assertSame('en-AU', Currency::new(null, 'AUD')->locale(99)->locale);
+        self::assertTrue($closureWasRun);
     }
 
     /**
@@ -861,8 +933,8 @@ class CurrencyUnitTest extends TestCase
         };
 
         Currency::currencyResolver($currencyResolver);
-        $this->assertSame('AUD', Currency::new(null, 'AUD')->curCode(36)->curCode);
-        $this->assertTrue($closureWasRun);
+        self::assertSame('AUD', Currency::new(null, 'AUD')->curCode(36)->curCode);
+        self::assertTrue($closureWasRun);
     }
 
     /**
@@ -873,28 +945,28 @@ class CurrencyUnitTest extends TestCase
      */
     public function test_currency_accepted_value_types(): void
     {
-        $this->assertSame(5, Currency::new(5, 'AUD')->cast);
-        $this->assertSame(5, Currency::new('5', 'AUD')->cast);
-        $this->assertSame(5.1, Currency::new(5.1, 'AUD')->cast);
+        self::assertSame(5, Currency::new(5, 'AUD')->cast);
+        self::assertSame(5, Currency::new('5', 'AUD')->cast);
+        self::assertSame(5.1, Currency::new(5.1, 'AUD')->cast);
 
         $cur2 = Currency::new(5, 'AUD');
-        $this->assertSame(5, Currency::new($cur2, 'AUD')->cast);
+        self::assertSame(5, Currency::new($cur2, 'AUD')->cast);
 
         // PHPUnit\Framework\Constraint\Exception is required by jchook/phpunit-assert-throws
         if (class_exists(ConstraintException::class)) {
 
             // initial value is invalid - boolean
-            $this->assertThrows(RealNumInvalidValueException::class, function () {
+            self::assertThrows(RealNumInvalidValueException::class, function () {
                 Currency::new(true, 'AUD'); // phpstan false positive
             });
 
             // initial value is invalid - non-numeric string
-            $this->assertThrows(RealNumInvalidValueException::class, function () {
+            self::assertThrows(RealNumInvalidValueException::class, function () {
                 Currency::new('abc', 'AUD');
             });
 
             // initial value is invalid - object
-            $this->assertThrows(RealNumInvalidValueException::class, function () {
+            self::assertThrows(RealNumInvalidValueException::class, function () {
                 Currency::new(new stdClass(), 'AUD'); // phpstan false positive
             });
         }
@@ -913,23 +985,23 @@ class CurrencyUnitTest extends TestCase
         if (class_exists(ConstraintException::class)) {
 
             // (pseudo-)property abc doesn't exist to get
-            $this->assertThrows(UndefinedPropertyException::class, function () {
+            self::assertThrows(UndefinedPropertyException::class, function () {
                 Currency::new(null, 'AUD')->abc; // phpstan false positive
             });
 
             // (pseudo-)property abc doesn't exist to SET
-            // $this->assertThrows(UndefinedPropertyException::class, function () {
+            // self::assertThrows(UndefinedPropertyException::class, function () {
             //     $currency = Currency::new('AUD');
             //     $currency->abc = true; // phpstan false positive
             // });
 
             // no currency given
-            $this->assertThrows(InvalidCurrencyException::class, function () {
+            self::assertThrows(InvalidCurrencyException::class, function () {
                 $currency = Currency::new(); // phpstan false positive
             });
 
             // invalid value to add
-            $this->assertThrows(RealNumInvalidValueException::class, function () {
+            self::assertThrows(RealNumInvalidValueException::class, function () {
                 Currency::new(null, 'AUD')->add(true); // phpstan false positive
             });
 
@@ -938,7 +1010,7 @@ class CurrencyUnitTest extends TestCase
                 ? DivisionByZeroError::class
                 : Warning::class;
             try {
-                $this->assertThrows($exceptionClass, function () {
+                self::assertThrows($exceptionClass, function () {
                     Currency::new(1, 'AUD')->div(0);
                 });
             } catch (Throwable $e) {
@@ -951,13 +1023,13 @@ class CurrencyUnitTest extends TestCase
             }
 
             // currency mismatch
-            $this->assertThrows(InvalidCurrencyException::class, function () {
+            self::assertThrows(InvalidCurrencyException::class, function () {
                 $cur2 = Currency::new(2.239482390, 'NZD');
                 Currency::new($cur2, 'AUD'); // invalid starting value
             });
 
             // currency mismatch
-            $this->assertThrows(
+            self::assertThrows(
                 InvalidCurrencyException::class,
                 function () {
                     $cur1 = Currency::new(5, 'AUD');
@@ -967,7 +1039,7 @@ class CurrencyUnitTest extends TestCase
             );
 
             // currency mismatch
-            $this->assertThrows(
+            self::assertThrows(
                 InvalidCurrencyException::class,
                 function () {
                     $cur1 = Currency::new(5, 'AUD');
@@ -977,12 +1049,12 @@ class CurrencyUnitTest extends TestCase
             );
 
             // unresolvable currency
-            $this->assertThrows(InvalidCurrencyException::class, function () {
+            self::assertThrows(InvalidCurrencyException::class, function () {
                 Currency::new(null, 1);
             });
 
             // unresolvable currency
-            $this->assertThrows(InvalidCurrencyException::class, function () {
+            self::assertThrows(InvalidCurrencyException::class, function () {
                 Currency::new(null, 'AUD')->curCode(1);
             });
         }

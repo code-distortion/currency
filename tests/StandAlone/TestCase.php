@@ -2,7 +2,7 @@
 
 namespace CodeDistortion\Currency\Tests\StandAlone;
 
-// phpunit added namespacing to it's classes in >= 5.5
+// phpunit added namespacing to its classes in >= 5.5
 // this code compensates for the fact that older versions of Laravel Orchestra Testbench (which are also part of the
 // test suite) require an older version of phpunit
 if (class_exists(\PHPUnit\Framework\TestCase::class)) {
