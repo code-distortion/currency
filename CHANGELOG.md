@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
+## [0.5.5] - 2024-08-09
+
+### Added
+- Added support for PHP 8.3
+- Added support for Laravel 10 & 11
+
+
+
 ## [0.5.4] - 2022-12-19
 
 ### Added
