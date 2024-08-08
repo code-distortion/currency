@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 
 
-## [0.5.5] - 2024-08-09
+## [0.5.5] - 2024-08-14
 
 ### Added
 - Added support for PHP 8.3
