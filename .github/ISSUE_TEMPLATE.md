@@ -6,7 +6,7 @@
 
 #### Versions:
 
-- currency version:
+- Currency version:
 - Laravel version:
 - PHP version:
 - OS + version:

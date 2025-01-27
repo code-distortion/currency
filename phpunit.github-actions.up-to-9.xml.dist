@@ -13,11 +13,10 @@
   convertWarningsToExceptions="true"
   defaultTimeLimit="10"
   enforceTimeLimit="false"
-  failOnIncomplete="false"
+  failOnIncomplete="true"
   failOnRisky="true"
   failOnSkipped="true"
   failOnWarning="true"
-  processIsolation="false"
   stopOnDefect="true"
   stopOnError="true"
   stopOnFailure="true"
@@ -29,15 +28,10 @@
 >
   <testsuites>
     <testsuite name="Laravel">
-      <directory>tests/Laravel</directory>
+      <directory suffix="Test.php">./tests/Laravel/</directory>
     </testsuite>
     <testsuite name="StandAlone">
-      <directory>tests/StandAlone</directory>
+      <directory suffix="Test.php">./tests/StandAlone/</directory>
     </testsuite>
   </testsuites>
-  <filter>
-    <whitelist>
-      <directory suffix=".php">src/</directory>
-    </whitelist>
-  </filter>
 </phpunit>

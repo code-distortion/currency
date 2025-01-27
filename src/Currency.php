@@ -426,8 +426,8 @@ class Currency extends Base
     public function format($options = null): ?string
     {
         $value = $this->getVal();
-        $parsedOptions = Options::parse($options);
-        $resolvedOptions = Options::defaults($this->formatSettings)->resolve($parsedOptions)->all();
+        $parsedOptions = Options::new($options)->all();
+        $resolvedOptions = Options::new($parsedOptions)->defaults($this->formatSettings)->all();
 
         // customise what happens when the value is null
         if ((!is_string($value)) || (!mb_strlen($value))) {

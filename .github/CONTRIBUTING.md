@@ -53,7 +53,7 @@ Before submitting a pull request:
 
 - **Add tests!** - Your patch won't be accepted if it doesn't have tests.
 
-- **Document any change in behaviour** - Clearly note any changes, so [currency's documentation](https://github.com/code-distortion/currency) can be updated.
+- **Document any change in behaviour** - Clearly note any changes, so [Currency's documentation](https://github.com/code-distortion/currency) can be updated.
 
 - **Consider our release cycle** - We try to follow [SemVer v2.0.0](https://semver.org/). Randomly breaking public APIs is to be avoided.
 

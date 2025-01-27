@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeDistortion\RealNum\Exceptions;
+namespace CodeDistortion\Currency\Exceptions;
 
 /**
  * Exception for when undefined properties are accessed.

@@ -4,23 +4,23 @@ namespace CodeDistortion\Currency\Tests\StandAlone\Unit;
 
 use CodeDistortion\Currency\Currency;
 use CodeDistortion\Currency\Exceptions\InvalidCurrencyException;
-use CodeDistortion\Currency\Tests\StandAlone\TestCase;
+use CodeDistortion\Currency\Tests\PHPUnitTestCase;
 use CodeDistortion\RealNum\Exceptions\InvalidValueException as RealNumInvalidValueException;
 use CodeDistortion\RealNum\Exceptions\UndefinedPropertyException;
 use CodeDistortion\RealNum\RealNum;
 use DivisionByZeroError;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Constraint\Exception as ConstraintException;
 use PHPUnit\Framework\Error\Warning;
-use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
-use Throwable;
 
 /**
  * Test the Currency library class.
  *
  * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  */
-class CurrencyUnitTest extends TestCase
+class CurrencyUnitTest extends PHPUnitTestCase
 {
     /**
      * Some alternate format settings used below for testing.
@@ -28,15 +28,15 @@ class CurrencyUnitTest extends TestCase
      * @var array
      */
     protected $altFormatSettings = [
-        'null' => 'null',
+        'accountingNeg' => true,
+        'breaking' => true,
         'decPl' => 5,
-        'trailZeros' => false,
+        'locale' => 'en-US',
+        'null' => 'null',
+        'showPlus' => true,
         'symbol' => false,
         'thousands' => false,
-        'showPlus' => true,
-        'accountingNeg' => true,
-        'locale' => 'en-US',
-        'breaking' => true,
+        'trailZeros' => false,
     ];
 
 
@@ -471,8 +471,10 @@ class CurrencyUnitTest extends TestCase
      * Test the ways the default locale, immutability and default-format settings are altered.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_default_settings(): void
     {
         Currency::resetDefaults();
@@ -517,6 +519,7 @@ class CurrencyUnitTest extends TestCase
      *
      * @test
      * @dataProvider immutableDataProviderSetters
+     *
      * @param boolean $immutable  Run the tests in immutable mode?.
      * @param string  $setMethod  The name of the method to call to set the value.
      * @param string  $getField   The name of the value to get to check the value afterwards.
@@ -524,6 +527,8 @@ class CurrencyUnitTest extends TestCase
      * @param mixed   $endValue   The value to end up with.
      * @return void
      */
+    #[Test]
+    #[DataProvider('immutableDataProviderSetters')]
     public function test_currency_immutability_setters(
         bool $immutable,
         string $setMethod,
@@ -549,8 +554,10 @@ class CurrencyUnitTest extends TestCase
      * Test the ways the Currency class can be instantiated.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_instantiation(): void
     {
         self::assertNull(Currency::new(null, 'AUD')->cast);
@@ -591,8 +598,10 @@ class CurrencyUnitTest extends TestCase
      * Test setting various Currency values.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_setting_and_getting_currency_settings(): void
     {
         // LOCALE-resolver callback
@@ -665,8 +674,10 @@ class CurrencyUnitTest extends TestCase
      * Test the various methods that perform a Currency calculation.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_altering(): void
     {
         $cur1 = Currency::new(5, 'AUD');
@@ -679,6 +690,7 @@ class CurrencyUnitTest extends TestCase
      *
      * @test
      * @dataProvider localeRenderingDataProvider
+     *
      * @param string            $locale        The locale to use.
      * @param string            $curCode       The currency to use.
      * @param float|null        $initialValue  The value to render.
@@ -686,6 +698,8 @@ class CurrencyUnitTest extends TestCase
      * @param string|null       $expectedValue The expected render output.
      * @return void
      */
+    #[Test]
+    #[DataProvider('localeRenderingDataProvider')]
     public function test_currency_locale_rendering(
         string $locale,
         string $curCode,
@@ -723,8 +737,10 @@ class CurrencyUnitTest extends TestCase
      * Test the __toString magic method.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_locale_casting_to_string(): void
     {
         $cur1 = Currency::new(1.234567890, 'AUD')->locale('en-AU');
@@ -747,8 +763,10 @@ class CurrencyUnitTest extends TestCase
      * Test how the Currency class handles different decimal places, and rounding.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_decimal_places(): void
     {
         $newCur = function ($curCode) {
@@ -838,8 +856,10 @@ class CurrencyUnitTest extends TestCase
      * Test how the Currency class' default locale is set and used.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_locale_changes(): void
     {
 
@@ -879,8 +899,10 @@ class CurrencyUnitTest extends TestCase
      * Test how the Currency class renders symbols in different currencies / locales.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_symbols(): void
     {
         self::assertSame('$', Currency::new(null, 'AUD')->locale('en-AU')->symbol);
@@ -917,8 +939,10 @@ class CurrencyUnitTest extends TestCase
      * Test how to get the currency code from the Currency object.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_codes(): void
     {
         self::assertSame('AUD', Currency::new(null, 'AUD')->curCode);
@@ -936,8 +960,10 @@ class CurrencyUnitTest extends TestCase
      * Test the locale resolver, as a closure and as a class.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_class_locale_resolver(): void
     {
         $closureWasRun = false;
@@ -955,8 +981,10 @@ class CurrencyUnitTest extends TestCase
      * Test the currency resolver.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_class_currency_resolver(): void
     {
 
@@ -975,8 +1003,10 @@ class CurrencyUnitTest extends TestCase
      * Test the different values that Currency can use.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_accepted_value_types(): void
     {
         self::assertSame(5, Currency::new(5, 'AUD')->cast);
@@ -990,19 +1020,31 @@ class CurrencyUnitTest extends TestCase
         if (class_exists(ConstraintException::class)) {
 
             // initial value is invalid - boolean
-            self::assertThrows(RealNumInvalidValueException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(true, 'AUD'); // phpstan false positive
-            });
+            } catch (RealNumInvalidValueException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // initial value is invalid - non-numeric string
-            self::assertThrows(RealNumInvalidValueException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new('abc', 'AUD');
-            });
+            } catch (RealNumInvalidValueException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // initial value is invalid - object
-            self::assertThrows(RealNumInvalidValueException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(new stdClass(), 'AUD'); // phpstan false positive
-            });
+            } catch (RealNumInvalidValueException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
         }
     }
 
@@ -1010,8 +1052,10 @@ class CurrencyUnitTest extends TestCase
      * Test the ways Currency generates exceptions.
      *
      * @test
+     *
      * @return void
      */
+    #[Test]
     public function test_currency_exceptions(): void
     {
 
@@ -1019,78 +1063,105 @@ class CurrencyUnitTest extends TestCase
         if (class_exists(ConstraintException::class)) {
 
             // (pseudo-)property abc doesn't exist to get
-            self::assertThrows(UndefinedPropertyException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(null, 'AUD')->abc; // phpstan false positive
-            });
+            } catch (UndefinedPropertyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
-            // (pseudo-)property abc doesn't exist to SET
-            // self::assertThrows(UndefinedPropertyException::class, function () {
-            //     $currency = Currency::new('AUD');
-            //     $currency->abc = true; // phpstan false positive
-            // });
+//            // (pseudo-)property abc doesn't exist to SET
+//            $caughtException = false;
+//            try {
+//                $currency = Currency::new('AUD');
+//                $currency->abc = true; // phpstan false positive
+//            } catch (UndefinedPropertyException $e) {
+//                $caughtException = true;
+//            }
+//            self::assertTrue($caughtException);
 
             // no currency given
-            self::assertThrows(InvalidCurrencyException::class, function () {
+            $caughtException = false;
+            try {
                 $currency = Currency::new(); // phpstan false positive
-            });
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // invalid value to add
-            self::assertThrows(RealNumInvalidValueException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(null, 'AUD')->add(true); // phpstan false positive
-            });
+            } catch (RealNumInvalidValueException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // division by 0
             $exceptionClass = version_compare(phpversion(), '8.0', '>=')
                 ? DivisionByZeroError::class
                 : Warning::class;
+            $caughtException = false;
             try {
-                self::assertThrows($exceptionClass, function () {
-                    Currency::new(1, 'AUD')->div(0);
-                });
-            } catch (Throwable $e) {
-                // for some reason, the DivisionByZeroError exception
-                // is still thrown in PHP 8.0 prefer-lowest tests
-                // double check it again here
-                if ($exceptionClass != get_class($e)) {
-                    throw $e;
-                }
+                Currency::new(1, 'AUD')->div(0);
+            } catch (DivisionByZeroError $e) {
+                $caughtException = (get_class($e) == $exceptionClass);
+            } catch (Warning $e) {
+                $caughtException = (get_class($e) == $exceptionClass);
             }
+            self::assertTrue($caughtException);
 
             // currency mismatch
-            self::assertThrows(InvalidCurrencyException::class, function () {
+            $caughtException = false;
+            try {
                 $cur2 = Currency::new(2.239482390, 'NZD');
                 Currency::new($cur2, 'AUD'); // invalid starting value
-            });
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // currency mismatch
-            self::assertThrows(
-                InvalidCurrencyException::class,
-                function () {
-                    $cur1 = Currency::new(5, 'AUD');
-                    $cur2 = Currency::new(2, 'NZD');
-                    $cur1->add($cur2);
-                }
-            );
+            $caughtException = false;
+            try {
+                $cur1 = Currency::new(5, 'AUD');
+                $cur2 = Currency::new(2, 'NZD');
+                $cur1->add($cur2);
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // currency mismatch
-            self::assertThrows(
-                InvalidCurrencyException::class,
-                function () {
-                    $cur1 = Currency::new(5, 'AUD');
-                    $cur2 = Currency::new(2, 'NZD');
-                    $cur1->lt($cur2);
-                }
-            );
+            $caughtException = false;
+            try {
+                $cur1 = Currency::new(5, 'AUD');
+                $cur2 = Currency::new(2, 'NZD');
+                $cur1->lt($cur2);
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // unresolvable currency
-            self::assertThrows(InvalidCurrencyException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(null, 1);
-            });
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
 
             // unresolvable currency
-            self::assertThrows(InvalidCurrencyException::class, function () {
+            $caughtException = false;
+            try {
                 Currency::new(null, 'AUD')->curCode(1);
-            });
+            } catch (InvalidCurrencyException $e) {
+                $caughtException = true;
+            }
+            self::assertTrue($caughtException);
         }
     }
 
